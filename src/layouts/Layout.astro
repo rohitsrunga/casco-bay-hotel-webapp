@@ -29,9 +29,16 @@ import '../styles/global.css';
 		<header id="main-header" class={isHome ? "" : "scrolled"}>
 			<div class="header-container">
 				<div class="header-left">
+					<a href={isHome ? "#home" : "/casco-bay-hotel-webapp/"} class="mobile-logo-link">
+						<svg class="mobile-nav-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<rect x="20" y="20" width="200" height="200" stroke="currentColor" stroke-width="2" />
+							<text x="50" y="150" font-family="var(--font-serif)" font-size="110" fill="currentColor" font-weight="500">C</text>
+							<text x="130" y="150" font-family="var(--font-serif)" font-size="110" fill="currentColor" font-weight="300" opacity="0.9">B</text>
+						</svg>
+					</a>
 					<nav class="main-nav left-nav">
 						<a href={isHome ? "#rooms" : "/casco-bay-hotel-webapp/#rooms"}>Rooms</a>
-						<a href={isHome ? "#amenities" : "/casco-bay-hotel-webapp/#amenities"}>Experience</a>
+						<a href="/casco-bay-hotel-webapp/experience">Experience</a>
 					</nav>
 				</div>
 				<div class="header-center">
@@ -60,9 +67,8 @@ import '../styles/global.css';
 			<div class="menu-dropdown-content">
 				<div class="menu-links">
 					<a href="/casco-bay-hotel-webapp/" class="menu-link">Home</a>
-					<!-- <a href="/casco-bay-hotel-webapp/rooms" class="menu-link">Rooms</a> -->
 					<a href={isHome ? "#rooms" : "/casco-bay-hotel-webapp/#rooms"} class="menu-link">Rooms</a>
-					<a href={isHome ? "#amenities" : "/casco-bay-hotel-webapp/#amenities"} class="menu-link">Amenities</a>
+					<a href="/casco-bay-hotel-webapp/experience" class="menu-link">Experience</a>
 					<a href={isHome ? "#location" : "/casco-bay-hotel-webapp/#location"} class="menu-link">Location</a>
 				</div>
 				<div class="menu-dropdown-footer">
@@ -88,12 +94,12 @@ import '../styles/global.css';
 					<nav class="footer-nav">
 						<div class="footer-nav-col">
 							<h4>Explore</h4>
-							<a href="#amenities">The Experience</a>
-							<a href="#location">Location</a>
+							<a href="/casco-bay-hotel-webapp/experience">Experience</a>
+							<a href={isHome ? "#location" : "/casco-bay-hotel-webapp/#location"}>Location</a>
 						</div>
 						<div class="footer-nav-col">
 							<h4>Stay</h4>
-							<a href="#rooms">Rooms</a>
+							<a href={isHome ? "#rooms" : "/casco-bay-hotel-webapp/#rooms"}>Rooms</a>
 							<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049">Reservations</a>
 						</div>
 					</nav>
@@ -131,6 +137,22 @@ import '../styles/global.css';
 				max-width: 1600px;
 				margin: 0 auto;
 				position: relative;
+			}
+
+			/* Mobile Nav Logo */
+			.mobile-logo-link {
+				display: none;
+			}
+
+			.mobile-nav-logo {
+				width: 38px;
+				height: 38px;
+				color: var(--white);
+				transition: color 0.4s ease;
+			}
+
+			#main-header.scrolled .mobile-nav-logo {
+				color: var(--navy-deep);
 			}
 
 			/* Logo Styles */
@@ -380,8 +402,8 @@ import '../styles/global.css';
 			}
 
 			@media (max-width: 768px) {
-				#main-header { 
-					padding: 1.5rem 1.5rem; 
+				#main-header {
+					padding: 1.5rem 1.5rem;
 				}
 
 				.header-container {
@@ -391,9 +413,31 @@ import '../styles/global.css';
 				}
 
 				.header-left {
+					position: absolute;
+					left: 0;
+					top: 50%;
+					transform: translateY(-50%);
 					display: none;
 				}
-				
+
+				#main-header.scrolled .header-left {
+					display: flex;
+					align-items: center;
+				}
+
+				.mobile-logo-link {
+					display: none;
+				}
+
+				#main-header.scrolled .mobile-logo-link {
+					display: flex;
+					align-items: center;
+				}
+
+				.header-left .left-nav {
+					display: none;
+				}
+
 				.header-center {
 					display: flex;
 					justify-content: center;
@@ -414,8 +458,8 @@ import '../styles/global.css';
 					display: none;
 				}
 
-				.logo-text { 
-					font-size: 1.2rem; 
+				.logo-text {
+					font-size: 1.2rem;
 					letter-spacing: 0.2rem;
 				}
 
@@ -446,7 +490,7 @@ import '../styles/global.css';
 			const menuToggle = document.getElementById('menu-toggle');
 			const menuLinks = document.querySelectorAll('.menu-link');
 			const isHome = header && !header.classList.contains('scrolled');
-			
+
 			// Scroll Logic
 			if (isHome) {
 				window.addEventListener('scroll', () => {
