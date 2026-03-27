@@ -1,0 +1,1501 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Casco Bay Hotel | South Portland, ME | Hotel Near Portland Airport" description="Casco Bay Hotel in South Portland, Maine — boutique hotel minutes from Portland International Jetport. Free airport shuttle, hot breakfast, free parking & Park & Fly packages. Book direct.">
+	<!-- Section 1: Main Landing Page -->
+	<section id="home" class="hero-press">
+		<!-- Hero Image Placeholder (Fades out when video is ready) -->
+		<div id="hero-placeholder" class="hero-image-overlay" style={`background: url('${import.meta.env.BASE_URL}main-hero-bg.png') center/cover no-repeat;`}></div>
+
+		<video
+			id="hero-video"
+			class="hero-video"
+			autoplay
+			muted
+			loop
+			playsinline
+		>
+			<source src={`${import.meta.env.BASE_URL}Lighthouse_Pan_Video.mp4`} type="video/mp4" />
+		</video>
+
+		<div class="hero-overlay-press"></div>
+
+		<div class="hero-container">
+			<div class="hero-content-press">
+				<div class="hero-logo-wrapper fade-in-up">
+					<svg class="main-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<rect x="20" y="20" width="200" height="200" stroke="white" stroke-width="2" />
+						<text x="50" y="150" font-family="var(--font-serif)" font-size="110" fill="white" font-weight="500">C</text>
+						<text x="130" y="150" font-family="var(--font-serif)" font-size="110" fill="white" font-weight="300" opacity="0.9">B</text>
+						<text x="120" y="195" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" letter-spacing="0.3em" font-weight="700" text-transform="uppercase">CASCO BAY HOTEL</text>
+					</svg>
+				</div>
+				<div class="hero-slogan-box fade-in-up">
+					<h1 class="hero-h1">Classic Maine. Modern Comfort.</h1>
+					<div class="slogan-divider-line"></div>
+					<p class="hero-subhead">Ten minutes from the Old Port. Two minutes from the Jetport. Right in the middle of everything that makes Portland worth visiting.</p>
+				</div>
+			</div>
+
+			<div class="booking-widget-container fade-in">
+				<div class="booking-card">
+					<div class="date-row">
+						<div class="date-box" id="checkin-trigger">
+							<span class="label">Check In</span>
+							<input type="date" id="checkin-date" class="hidden-input" />
+							<span class="day" id="checkin-day">--</span>
+							<span class="month" id="checkin-month">Select</span>
+						</div>
+						<div class="date-box" id="checkout-trigger">
+							<span class="label">Check Out</span>
+							<input type="date" id="checkout-date" class="hidden-input" />
+							<span class="day" id="checkout-day">--</span>
+							<span class="month" id="checkout-month">Select</span>
+						</div>
+					</div>
+					
+					<div class="booking-details-row">
+						<div class="rooms-section">
+							<div class="custom-input-box">
+								<select id="rooms-count" class="select-reset">
+									<option value="1" selected>1 ROOM</option>
+									<option value="2">2 ROOMS</option>
+									<option value="3">3 ROOMS</option>
+									<option value="4">4 ROOMS</option>
+									<option value="5">5 ROOMS</option>
+								</select>
+							</div>
+						</div>
+						<div class="occupancy-section">
+							<div class="custom-input-box">
+								<select id="adults-count" class="select-reset">
+									<option value="1">1 ADULT</option>
+									<option value="2" selected>2 ADULTS</option>
+									<option value="3">3 ADULTS</option>
+									<option value="4">4 ADULTS</option>
+									<option value="5">5 ADULTS</option>
+									<option value="6">6 ADULTS</option>
+									<option value="7">7 ADULTS</option>
+									<option value="8">8 ADULTS</option>
+									<option value="9">9 ADULTS</option>
+									<option value="10">10 ADULTS</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="promo-section">
+							<div class="custom-input-box">
+								<input type="text" id="promo-code" placeholder="PROMO" class="input-reset" />
+							</div>
+						</div>
+					</div>
+
+					<button id="main-book-btn" class="btn-primary" style="width: 100%; padding: 1.4rem;">
+						BOOK YOUR STAY
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		const video = document.getElementById('hero-video') as HTMLVideoElement;
+		const placeholder = document.getElementById('hero-placeholder');
+
+		if (video && placeholder) {
+			video.onplaying = () => {
+				placeholder.style.opacity = '0';
+				setTimeout(() => {
+					placeholder.style.display = 'none';
+				}, 1500);
+			};
+		}
+
+		// Booking Logic
+		const checkinInput = document.getElementById('checkin-date') as HTMLInputElement;
+		const checkoutInput = document.getElementById('checkout-date') as HTMLInputElement;
+		const adultsSelect = document.getElementById('adults-count') as HTMLSelectElement;
+		const roomsSelect = document.getElementById('rooms-count') as HTMLSelectElement;
+		const promoInput = document.getElementById('promo-code') as HTMLInputElement;
+		const mainBookBtn = document.getElementById('main-book-btn');
+
+		const getLocalDateStr = (date: Date) => {
+			const offset = date.getTimezoneOffset();
+			const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+			return localDate.toISOString().split('T')[0];
+		};
+
+		const today = new Date();
+		const tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+
+		if (checkinInput && checkoutInput) {
+			checkinInput.value = getLocalDateStr(today);
+			checkoutInput.value = getLocalDateStr(tomorrow);
+			updateDateDisplay();
+		}
+
+		function updateDateDisplay() {
+			const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+			
+			if (checkinInput.value) {
+				const d = new Date(checkinInput.value + 'T00:00:00');
+				document.getElementById('checkin-day')!.textContent = d.getDate().toString();
+				document.getElementById('checkin-month')!.textContent = months[d.getMonth()];
+			}
+			if (checkoutInput.value) {
+				const d = new Date(checkoutInput.value + 'T00:00:00');
+				document.getElementById('checkout-day')!.textContent = d.getDate().toString();
+				document.getElementById('checkout-month')!.textContent = months[d.getMonth()];
+			}
+		}
+
+		[checkinInput, checkoutInput].forEach(el => el?.addEventListener('change', updateDateDisplay));
+
+		function getBookingUrl() {
+			const checkin = checkinInput.value;
+			const checkout = checkoutInput.value;
+			const adults = adultsSelect.value;
+			const rooms = roomsSelect?.value || '1';
+			const promo = promoInput?.value || '';
+			
+			let url = `https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049?checkInDate=${checkin}&checkOutDate=${checkout}&adults=${adults}&rooms=${rooms}`;
+			
+			if (promo) {
+				url += `&clientId=${promo}`;
+			}
+			
+			return url;
+		}
+
+		mainBookBtn?.addEventListener('click', () => {
+			window.open(getBookingUrl(), '_blank');
+		});
+
+		document.querySelectorAll('.btn-primary:not(#main-book-btn)').forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				e.preventDefault();
+				window.open(getBookingUrl(), '_blank');
+			});
+		});
+	</script>
+
+	<!-- Section 2: The Experience (Staggered Layout) -->
+	<section class="experience bg-coastal textured">
+		<div class="container">
+			<!-- Block 1: About Us -->
+			<div class="experience-block">
+				<div class="experience-visual">
+					<img src={`${import.meta.env.BASE_URL}assets/amenities/exterior.jpg`} alt="Casco Bay Hotel exterior building in South Portland Maine" />
+				</div>
+				<div class="experience-content">
+					<span class="eyebrow-dash">About Us</span>
+					<h2 class="navy-text">Unwind in Style <span class="serif-italic">with</span> <br/> <strong>Casco Bay Hotel</strong></h2>
+					<p>Casco Bay Hotel sits in South Portland, just across the bridge from the Old Port and a two-minute drive from Portland International Jetport. We renovated completely in 2022 — new rooms, new lobby, new everything — because we wanted guests to actually look forward to coming back.</p>
+					<p>Whether you're here for a long weekend on the coast, a work trip to Portland, or catching an early flight out of PWM, we've built this place around making that easy.</p>
+					<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Now</a>
+				</div>
+			</div>
+
+			<!-- Block 2: Philosophy -->
+			<div class="experience-block reverse">
+				<div class="experience-visual">
+					<img src={`${import.meta.env.BASE_URL}assets/amenities/lobby.png`} alt="Casco Bay Hotel lobby interior South Portland Maine" />
+				</div>
+				<div class="experience-content">
+					<span class="eyebrow-dash">Philosophy</span>
+					<h3 class="navy-text">Our Commitment <span class="serif-italic">to</span> <br/> <strong>South Portland</strong></h3>
+					<p>South Portland doesn't get enough credit. Most visitors beeline for the Old Port, but this side of the bridge has better parking, quieter streets, and the same access to everything Portland is known for — the food scene, the waterfront, the hiking.</p>
+					<p>We're right here in the middle of it, and we think once you stay with us, you'll see why our guests keep coming back.</p>
+					<a href="#amenities" class="btn-learn">Our Amenities</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 3: The Suites (Vertical Gallery Scrolling) -->
+	<section id="rooms" class="suites-vertical-gallery bg-navy">
+		<div class="suites-split-wrapper">
+			<!-- Left: Sticky Visual -->
+			<div class="suites-visual-sticky">
+				<div class="sticky-image-container">
+					<img id="suite-img-king" src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" class="active" />
+					<img id="suite-img-queen" src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
+					<img id="suite-img-double" src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
+				</div>
+			</div>
+
+			<!-- Right: Scrollable Details -->
+			<div class="suites-details-scroll">
+				<div class="suite-content-block" data-suite="king">
+					<div class="suite-image-mobile">
+						<img src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" />
+					</div>
+					<div class="suite-info-inner">
+						<span class="eyebrow">Signature Suite</span>
+						<h2>Deluxe King</h2>
+						<div class="suite-specs-line">
+							<span>2 Guests</span>
+							<span>1 King Bed</span>
+							<span>350 SQFT</span>
+						</div>
+						<p>Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you're in for more than one night.</p>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
+					</div>
+				</div>
+
+				<div class="suite-content-block" data-suite="queen">
+					<div class="suite-image-mobile">
+						<img src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
+					</div>
+					<div class="suite-info-inner">
+						<span class="eyebrow">Modern Retreat</span>
+						<h2>Deluxe Queen</h2>
+						<div class="suite-specs-line">
+							<span>2 Guests</span>
+							<span>1 Queen Bed</span>
+							<span>280 SQFT</span>
+						</div>
+						<p>A well-sized room with a queen bed that works whether you're here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn't waste space.</p>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
+					</div>
+				</div>
+
+				<div class="suite-content-block" data-suite="double">
+					<div class="suite-image-mobile">
+						<img src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
+					</div>
+					<div class="suite-info-inner">
+						<span class="eyebrow">Family Suite</span>
+						<h2>Double Suite</h2>
+						<div class="suite-specs-line">
+							<span>4 Guests</span>
+							<span>2 Double Beds</span>
+							<span>400 SQFT</span>
+						</div>
+						<p>Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.</p>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		// Vertical Gallery Interaction
+		const suiteBlocks = document.querySelectorAll('.suite-content-block');
+		const suiteImages = document.querySelectorAll('.sticky-image-container img');
+		const stickyVisual = document.querySelector('.suites-visual-sticky') as HTMLElement;
+		const gallerySection = document.getElementById('rooms') as HTMLElement;
+
+		// Handle Sticky Positioning (Fallback for CSS Sticky)
+		function handleSticky() {
+			if (!stickyVisual || !gallerySection) return;
+
+			const rect = gallerySection.getBoundingClientRect();
+			const sectionTop = rect.top;
+			const sectionBottom = rect.bottom;
+
+			const wrapper = gallerySection.querySelector('.suites-split-wrapper') as HTMLElement;
+			const wrapperRect = wrapper.getBoundingClientRect();
+
+			if (sectionTop <= 0 && sectionBottom >= window.innerHeight) {
+				stickyVisual.classList.add('is-fixed');
+				stickyVisual.classList.remove('is-bottom');
+				stickyVisual.style.left = `${wrapperRect.left}px`;
+				stickyVisual.style.width = `${wrapperRect.width / 2}px`;
+			} else if (sectionBottom < window.innerHeight) {
+				stickyVisual.classList.remove('is-fixed');
+				stickyVisual.classList.add('is-bottom');
+				stickyVisual.style.left = '0';
+				stickyVisual.style.width = '50%';
+			} else {
+				stickyVisual.classList.remove('is-fixed');
+				stickyVisual.classList.remove('is-bottom');
+				stickyVisual.style.left = '0';
+				stickyVisual.style.width = '50%';
+			}
+		}
+
+		window.addEventListener('scroll', handleSticky);
+		window.addEventListener('resize', handleSticky);
+		handleSticky(); // Initial check
+
+		// Image Swap Observer
+		const observerOptions = {
+			root: null,
+			threshold: 0.5,
+			rootMargin: "-10% 0px -10% 0px"
+		};
+
+		const suiteObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-active');
+					const suiteId = entry.target.getAttribute('data-suite');
+					suiteImages.forEach(img => {
+						if (img.id === `suite-img-${suiteId}`) {
+							img.classList.add('active');
+						} else {
+							img.classList.remove('active');
+						}
+					});
+				} else {
+					entry.target.classList.remove('is-active');
+				}
+			});
+		}, observerOptions);
+
+		suiteBlocks.forEach(block => suiteObserver.observe(block));
+	</script>
+
+	<!-- Section 4: Amenities (Magazine Layout with 2 Columns) -->
+	<section id="amenities" class="amenities-magazine bg-mist textured">
+		<div class="container">
+			<div class="amenities-magazine-layout">
+				<div class="amenity-visual">
+					<div class="visual-stack">
+						<div class="visual-main" style={`background-image: url('${import.meta.env.BASE_URL}assets/amenities/food.png')`}></div>
+						<div class="visual-accent"></div>
+					</div>
+				</div>
+				<div class="amenity-content-right">
+					<div class="amenity-intro-wrap">
+						<span class="eyebrow">The Experience</span>
+						<h2 class="navy-text">Everything You <span class="serif-italic">Actually Need</span></h2>
+					</div>
+					<p class="amenity-subtext">Hot breakfast every morning. Free parking always. 24-hour shuttle to and from the Jetport. We've tried to take the friction out of travel — so you can spend your time on the Maine coast, not logistics.</p>
+
+					<!-- Shared Grid for Caption and Lists -->
+					<div class="amenity-grid-main">
+						<div class="amenity-cta-col" style="grid-column: span 2;">
+							<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Now</a>
+						</div>
+
+						<div class="amenity-col">
+							<span class="sans-caps">Wellness & Travel</span>
+							<ul>
+								<li>Free 24hr Airport Shuttle</li>
+								<li>Hot Coastal Breakfast</li>
+								<li>24hr Wellness Suite</li>
+								<li>Complimentary Parking</li>
+							</ul>
+						</div>
+						<div class="amenity-col">
+							<span class="sans-caps">In-Suite Essentials</span>
+							<ul>
+								<li>Premium High-Speed WiFi</li>
+								<li>Refrigerator & Microwave</li>
+								<li>Keurig Coffee Makers</li>
+								<li>Plush Bedding & Linens</li>
+							</ul>
+						</div>
+						<div class="amenity-col">
+							<span class="sans-caps">Coastal Leisure</span>
+							<ul>
+								<li>Complimentary Bike Rentals</li>
+								<li>Beach Gear & Towels</li>
+								<li>Local Attraction Passes</li>
+								<li>Seasonal Outdoor Seating</li>
+							</ul>
+						</div>
+						<div class="amenity-col">
+							<span class="sans-caps">Modern Convenience</span>
+							<ul>
+								<li>24hr Business Station</li>
+								<li>Electric Vehicle Charging</li>
+								<li>Express Mobile Check-in</li>
+								<li>Digital Guest Directory</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 5: Park & Fly -->
+	<section id="park-and-fly" class="park-fly-section bg-navy">
+		<div class="container">
+			<div class="park-fly-layout">
+				<div class="park-fly-content">
+					<span class="eyebrow">For Travelers</span>
+					<h2>Park & Fly Packages</h2>
+					<p>Traveling through Portland International Jetport? Our Park & Fly package lets you stay the night before your flight and leave your car with us while you travel — at no extra charge. Free 24-hour airport shuttle included.</p>
+					<ul class="park-fly-list">
+						<li>Free parking for the duration of your trip</li>
+						<li>Complimentary 24-hour airport shuttle to PWM</li>
+						<li>Hot breakfast included</li>
+						<li>Early check-in / late check-out available on request</li>
+					</ul>
+					<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Park & Fly</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 6: Guest Reviews -->
+	<section id="reviews" class="reviews-section bg-mist textured">
+		<div class="container">
+			<div class="reviews-header">
+				<span class="eyebrow">Testimonials</span>
+				<h2 class="navy-text">What Our Guests Say</h2>
+			</div>
+			<div class="reviews-grid">
+				<div class="review-card">
+					<p>&ldquo;Perfect location for our Portland trip. The airport shuttle was a lifesaver and breakfast was excellent.&rdquo;</p>
+					<span class="review-author">&mdash; Sarah M., Google Review &#9733;&#9733;&#9733;&#9733;&#9733;</span>
+				</div>
+				<div class="review-card">
+					<p>&ldquo;Clean, modern rooms and the staff went above and beyond. Will definitely stay again when visiting Maine.&rdquo;</p>
+					<span class="review-author">&mdash; James T., TripAdvisor &#9733;&#9733;&#9733;&#9733;&#9733;</span>
+				</div>
+				<div class="review-card">
+					<p>&ldquo;The Park & Fly package saved us so much hassle. Great value and very convenient to the airport.&rdquo;</p>
+					<span class="review-author">&mdash; Linda K., Choice Privileges &#9733;&#9733;&#9733;&#9733;&#9733;</span>
+				</div>
+			</div>
+			<p class="reviews-cta">
+				<a href="https://www.google.com/travel/search?q=casco%20bay%20hotel%20portland&g2lb=4965990%2C72471280%2C72560029%2C72573224%2C72647020%2C72686036%2C72803964%2C72882230%2C72958624%2C73059275%2C73064764%2C121578478&hl=en-US&gl=us&cs=1&ssta=1&ts=CAEaRwopEicyJTB4NGNiMjk5MTViOWNjOWE5NToweGNmMWEzNzZkY2IyMjY4YjcSGhIUCgcI6g8QAxgYEgcI6g8QAxgaGAIyAhAA&qs=CAEyFENnc0l0OUdKMmR6dGpZM1BBUkFCOAJCCQm3aCLLbTcaz0IJCbdoIsttNxrP&ap=ugEHcmV2aWV3cw&ictx=111&ved=0CAAQ5JsGahcKEwiQzq6fkrWTAxUAAAAAHQAAAAAQBA" target="_blank">Read more reviews on Google &rarr;</a>
+			</p>
+		</div>
+	</section>
+
+	<!-- Section 7: Location (Map Background Style) -->
+	<section id="location" class="location-map-style" style={`background-image: url('${import.meta.env.BASE_URL}assets/location/map.jpg')`}>
+		<div class="container">
+			<div class="location-map-grid">
+				<!-- Left: Info Column -->
+				<div class="location-map-info">
+					<div class="location-hotel-visual">
+						<img src={`${import.meta.env.BASE_URL}assets/location/building.jpg`} alt="Casco Bay Hotel exterior building in South Portland Maine" />
+					</div>
+					<div class="location-text-content">
+						<h2>WHERE TO FIND US</h2>
+						<p>We're on John Roberts Road in South Portland — 1.4 miles from Portland International Jetport, about 10 minutes to the Old Port depending on bridge traffic, and 5 minutes to Willard Beach if you want your feet in the ocean. Cracker Barrel and a handful of local spots are within walking distance for dinner. If you're flying in or out of PWM, we're genuinely the most convenient hotel on either side of the bridge.</p>
+
+						<div class="location-contact-minimal">
+							<p>80 John Roberts Rd, South Portland, ME 04106</p>
+							<p><strong>Phone:</strong> (207) 558-4341</p>
+							<p><strong>Email:</strong> reservations@cascobayhotel.com</p>
+						</div>
+
+						<div class="location-ctas-map">
+							<a href="https://www.google.com/maps?client=safari&rls=en&oe=UTF-8&um=1&ie=UTF-8&fb=1&gl=us&sa=X&geocode=KZWazLkVmbJMMbdoIsttNxrP&daddr=80+John+Roberts+Rd,+South+Portland,+ME+04106" target="_blank" class="link-underlined-dark">Open in Maps &rarr;</a>
+							<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Now</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Right: Empty for Map Visual -->
+				<div class="location-map-pins"></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Section 8: Good to Know -->
+	<section id="good-to-know" class="good-to-know-section bg-coastal textured">
+		<div class="container">
+			<div class="good-to-know-layout">
+				<div class="good-to-know-header">
+					<span class="eyebrow">Before You Arrive</span>
+					<h2 class="navy-text">Good to Know</h2>
+				</div>
+				<ul class="good-to-know-list">
+					<li><strong>Airport shuttle:</strong> We run 24 hours a day to and from Portland International Jetport (PWM) — just call the front desk when you land.</li>
+					<li><strong>Park & Fly:</strong> Stay the night before your flight, leave your car with us while you travel. Free for the duration of your trip.</li>
+					<li><strong>Breakfast:</strong> Hot breakfast is included every morning, not just continental — eggs, proteins, the works.</li>
+					<li><strong>Pets:</strong> Please call ahead to confirm our current pet policy — (207) 558-4341.</li>
+					<li><strong>Check-in / Check-out:</strong> Standard check-in at 3pm, check-out at 11am. Early/late available on request — just ask.</li>
+					<li><strong>Parking:</strong> Free, on-site, always. No garage fees, no validation stickers.</li>
+					<li><strong>Getting to Portland:</strong> The Old Port is about 10 minutes by car. Rideshare works fine; we can also point you to the Metro bus if you prefer.</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* Fixed Hero Layout */
+	.hero-press {
+		position: relative;
+		height: 100vh;
+		width: 100%;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--white);
+		padding: 0 !important; /* Override global section padding */
+	}
+
+	.hero-image-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 3;
+		opacity: 0.9;
+		transition: opacity 1.5s ease-in-out;
+	}
+
+	.hero-video {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: 1;
+		opacity: 0.9;
+	}
+
+	.hero-overlay-press {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
+		z-index: 2;
+	}
+
+	.hero-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 1400px;
+		padding: 0 4rem;
+		position: relative;
+		z-index: 10;
+	}
+
+	.hero-content-press {
+		max-width: 600px;
+		display: flex;
+		align-items: center;
+		gap: 3rem;
+	}
+
+	.hero-logo-wrapper {
+		width: 180px;
+		height: 180px;
+		flex-shrink: 0;
+	}
+
+	.main-logo {
+		width: 100%;
+		height: 100%;
+	}
+
+	.hero-h1 {
+		font-family: inherit;
+		font-size: 1.15rem;
+		text-transform: uppercase;
+		letter-spacing: 0.5rem;
+		color: var(--white);
+		margin: 0 0 0.5rem 0;
+		font-weight: 400;
+		line-height: 1.6;
+	}
+
+	.hero-subhead {
+		font-size: 0.9rem;
+		color: rgba(255,255,255,0.8);
+		line-height: 1.6;
+		margin: 0;
+		letter-spacing: 0.02em;
+	}
+
+	.hero-slogan-box {
+		color: var(--white);
+		border-left: 1px solid rgba(255,255,255,0.3);
+		padding-left: 3.5rem;
+	}
+
+	.slogan-divider-line {
+		width: 40px;
+		height: 1px;
+		background-color: var(--accent);
+		margin: 0.5rem 0;
+	}
+
+	.booking-widget-container {
+		width: 380px;
+	}
+
+	.booking-card {
+		background: var(--bg-warm);
+		padding: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		color: var(--text-main);
+		box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+		position: relative;
+	}
+
+	.hidden-input {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+		z-index: 5;
+	}
+
+	.date-box {
+		position: relative;
+		background: var(--bg-mist);
+		padding: 0.8rem;
+		text-align: center;
+	}
+
+	.select-reset, .input-reset {
+		background: transparent;
+		border: none;
+		width: 100%;
+		font-family: var(--font-sans);
+		font-size: 0.6rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		color: var(--navy-deep);
+		cursor: pointer;
+		text-align: center;
+		text-align-last: center;
+		outline: none;
+		padding: 0;
+		margin: 0;
+		display: block;
+		appearance: none;
+		-webkit-appearance: none;
+	}
+
+	.date-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
+	}
+
+	.date-box .label {
+		font-size: 0.55rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		display: block;
+		margin-bottom: 0.5rem;
+		opacity: 0.8;
+	}
+
+	.date-box .day {
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		display: block;
+		line-height: 1;
+		margin-bottom: 0.2rem;
+	}
+
+	.date-box .month {
+		font-size: 0.65rem;
+		text-transform: uppercase;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+	}
+
+	.booking-details-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 0.5rem;
+	}
+
+	.custom-input-box {
+		background: var(--bg-mist);
+		height: 45px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 0.5rem;
+	}
+
+	.input-reset::placeholder {
+		color: rgba(16, 42, 67, 0.4);
+	}
+
+	/* Experience Staggered Layout */
+	.experience-block {
+		display: grid;
+		grid-template-columns: 1.1fr 0.9fr;
+		gap: 10rem;
+		align-items: center;
+		margin-bottom: 12rem;
+	}
+
+	.experience-block.reverse {
+		grid-template-columns: 0.9fr 1.1fr;
+	}
+
+	.experience-block.reverse .experience-visual { order: 2; }
+
+	.experience-visual img {
+		width: 100%;
+		height: 750px;
+		object-fit: cover;
+		border: 1px solid var(--border-blue);
+		box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+	}
+
+	.experience-content {
+		padding: 2rem 0;
+	}
+
+	.eyebrow-dash {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		font-family: var(--font-sans);
+		text-transform: uppercase;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.15em;
+		color: var(--navy-deep);
+		margin-bottom: 2rem;
+	}
+
+	.eyebrow-dash::before {
+		content: "";
+		width: 30px;
+		height: 1px;
+		background: var(--accent);
+	}
+
+	.experience-content h2,
+	.experience-content h3 {
+		font-size: 3.8rem;
+		line-height: 1.1;
+		margin-bottom: 2.5rem;
+		color: var(--navy-deep);
+	}
+
+	.experience-content h2 strong,
+	.experience-content h3 strong {
+		font-weight: 800;
+		color: var(--text-main);
+	}
+
+	.experience-content p {
+		font-size: 1.15rem;
+		color: var(--text-muted);
+		line-height: 1.8;
+		margin-bottom: 2rem;
+	}
+
+	.btn-learn {
+		display: inline-flex;
+		align-items: center;
+		gap: 1rem;
+		background: var(--navy-deep);
+		color: var(--white) !important;
+		padding: 1.2rem 2.8rem;
+		text-transform: uppercase;
+		font-size: 0.75rem;
+		font-weight: 800;
+		letter-spacing: 0.15em;
+		margin-top: 2rem;
+		transition: all 0.4s ease;
+	}
+
+	.btn-learn::before {
+		content: "—";
+		font-weight: 400;
+	}
+
+	.btn-learn:hover {
+		background: var(--accent);
+		transform: translateY(-3px);
+		box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+	}
+
+	@media (max-width: 1024px) {
+		.experience-block, .experience-block.reverse {
+			grid-template-columns: 1fr;
+			gap: 4rem;
+			margin-bottom: 8rem;
+		}
+		.experience-visual { order: 1 !important; }
+		.experience-content { order: 2 !important; }
+		.experience-visual img { height: 500px; }
+		.experience-content h2, .experience-content h3 { font-size: 2.8rem; }
+	}
+
+	.suites-vertical-gallery {
+		padding: 0;
+		position: relative;
+	}
+
+	.suites-split-wrapper {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: stretch;
+		position: relative;
+	}
+
+	.suites-visual-sticky {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		width: 50%;
+		overflow: hidden;
+		background: var(--navy-deep);
+		z-index: 10;
+	}
+
+	.suites-visual-sticky.is-fixed {
+		position: fixed;
+		top: 0;
+	}
+
+	.suites-visual-sticky.is-bottom {
+		top: auto;
+		bottom: 0;
+	}
+
+	.sticky-image-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.sticky-image-container img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition: opacity 0.8s ease-in-out, transform 1.2s ease-out;
+		transform: scale(1.05);
+	}
+
+	.sticky-image-container img.active {
+		opacity: 1;
+		transform: scale(1);
+		z-index: 2;
+	}
+
+	.suite-image-mobile {
+		display: none;
+	}
+
+	.suites-details-scroll {
+		grid-column: 2;
+		background: var(--navy-deep);
+		color: var(--white);
+		position: relative;
+		z-index: 5;
+	}
+
+	.suite-content-block {
+		min-height: 80vh;
+		display: flex;
+		align-items: center;
+		padding: 10rem 10%;
+		scroll-snap-align: center;
+	}
+
+	.suite-info-inner {
+		max-width: 500px;
+		opacity: 0.1;
+		transform: translateY(40px);
+		transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+		filter: blur(4px);
+	}
+
+	.suite-content-block.is-active .suite-info-inner {
+		opacity: 1;
+		transform: translateY(0);
+		filter: blur(0);
+	}
+
+	.suite-info-inner .eyebrow {
+		color: #60a5fa;
+		margin-bottom: 1.5rem;
+	}
+
+	.suite-info-inner h2 {
+		font-size: 5rem;
+		line-height: 1;
+		margin-bottom: 2rem;
+		font-weight: 400;
+	}
+
+	.suite-specs-line {
+		display: flex;
+		gap: 2rem;
+		font-family: var(--font-sans);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: #94a3b8;
+		margin-bottom: 2.5rem;
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+		padding-bottom: 1.5rem;
+	}
+
+	.suite-info-inner p {
+		font-size: 1.1rem;
+		line-height: 1.8;
+		color: #94a3b8;
+		margin-bottom: 3.5rem;
+	}
+
+	.btn-primary-suites {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.4rem 3.5rem;
+		background-color: var(--accent);
+		color: var(--white) !important;
+		font-family: var(--font-sans);
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+		font-size: 0.8rem;
+		font-weight: 800;
+		border: none;
+		cursor: pointer;
+		transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+		box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+	}
+
+	.btn-primary-suites:hover {
+		background-color: #1d4ed8;
+		transform: translateY(-4px);
+		box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
+	}
+
+	@media (max-width: 1024px) {
+		.suites-split-wrapper {
+			grid-template-columns: 1fr;
+		}
+		.suites-visual-sticky {
+			display: none;
+		}
+		.suite-image-mobile {
+			display: block;
+			width: 100%;
+			height: 350px;
+			overflow: hidden;
+		}
+		.suite-image-mobile img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		.suite-content-block {
+			height: auto;
+			min-height: auto;
+			padding: 0 0 6rem 0;
+			background: var(--navy-deep);
+			display: block;
+		}
+		.suite-info-inner {
+			padding: 3rem 1.5rem;
+			max-width: 100%;
+			opacity: 1;
+			transform: none;
+			filter: none;
+		}
+		.suite-info-inner h2 {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+		}
+		.suite-specs-line {
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 2rem;
+			font-style: italic;
+			font-family: var(--font-serif);
+			text-transform: none;
+			font-size: 1.1rem;
+			color: #94a3b8;
+			gap: 1.5rem;
+		}
+	}
+
+	/* Amenities Section */
+	.amenities-magazine-layout {
+		display: grid;
+		grid-template-columns: 0.8fr 1.2fr;
+		gap: 8rem;
+		align-items: center;
+	}
+
+	.visual-stack {
+		position: relative;
+	}
+
+	.visual-main {
+		height: 600px;
+		background-size: cover;
+		background-position: center;
+		border: 1px solid var(--border-blue);
+		position: relative;
+		z-index: 2;
+	}
+
+	.visual-accent {
+		position: absolute;
+		bottom: -2rem;
+		right: -2rem;
+		width: 100%;
+		height: 100%;
+		border: 1px solid var(--accent);
+		z-index: 1;
+	}
+
+	.amenity-subtext {
+		font-size: 1.1rem;
+		color: var(--text-muted);
+		line-height: 1.8;
+		margin-bottom: 2rem;
+	}
+
+	.amenity-grid-main {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+	}
+
+	.amenity-cta-col {
+		display: flex;
+		align-items: flex-start;
+		justify-content: flex-start;
+		margin-bottom: 1rem;
+	}
+
+	.amenity-intro-wrap h2 { font-size: 4rem; margin-bottom: 0.8rem; }
+	.amenity-intro-wrap p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 0; }
+
+	.amenity-col span { display: block; margin-bottom: 1.5rem; color: var(--accent); }
+	.amenity-col ul { list-style: none; }
+	.amenity-col li { font-size: 0.9rem; margin-bottom: 0.8rem; font-weight: 600; color: var(--navy-deep); }
+
+	@media (max-width: 1024px) {
+		.amenities-magazine-layout { grid-template-columns: 1fr; gap: 4rem; }
+		.visual-main { height: 400px; }
+		.visual-accent { display: none; }
+		.amenity-grid-main { grid-template-columns: repeat(2, 1fr); gap: 3rem 1.5rem; }
+		.amenity-cta-col { grid-column: span 2; margin-bottom: 2rem; }
+	}
+
+	/* Park & Fly Section */
+	.park-fly-section {
+		padding: 8rem 0;
+	}
+
+	.park-fly-layout {
+		max-width: 800px;
+	}
+
+	.park-fly-content h2 {
+		font-size: 3.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.park-fly-content p {
+		font-size: 1.1rem;
+		color: #94a3b8;
+		line-height: 1.8;
+		margin-bottom: 2.5rem;
+	}
+
+	.park-fly-list {
+		list-style: none;
+		margin-bottom: 3rem;
+	}
+
+	.park-fly-list li {
+		font-size: 1rem;
+		color: #cbd5e1;
+		padding: 0.8rem 0;
+		border-bottom: 1px solid rgba(255,255,255,0.08);
+		padding-left: 1.5rem;
+		position: relative;
+	}
+
+	.park-fly-list li::before {
+		content: "—";
+		position: absolute;
+		left: 0;
+		color: var(--accent);
+	}
+
+	/* Reviews Section */
+	.reviews-section {
+		padding: 8rem 0;
+	}
+
+	.reviews-header {
+		text-align: center;
+		margin-bottom: 5rem;
+	}
+
+	.reviews-header h2 {
+		font-size: 3.5rem;
+	}
+
+	.reviews-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 3rem;
+	}
+
+	.review-card {
+		background: var(--white);
+		padding: 3rem;
+		border: 1px solid var(--border-blue);
+		box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+	}
+
+	.review-card p {
+		font-family: var(--font-serif);
+		font-size: 1.2rem;
+		font-style: italic;
+		line-height: 1.7;
+		color: var(--navy-deep);
+		margin-bottom: 2rem;
+	}
+
+	.review-author {
+		font-family: var(--font-sans);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--text-muted);
+	}
+
+	.reviews-cta {
+		text-align: center;
+		margin-top: 3rem;
+	}
+
+	.reviews-cta a {
+		font-family: var(--font-sans);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: var(--accent);
+		border-bottom: 1px solid var(--accent);
+		padding-bottom: 0.3rem;
+	}
+
+	.reviews-cta a:hover {
+		color: var(--navy-deep);
+		border-bottom-color: var(--navy-deep);
+	}
+
+	@media (max-width: 1024px) {
+		.reviews-grid {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+	}
+
+	/* Good to Know Section */
+	.good-to-know-section {
+		padding: 8rem 0;
+	}
+
+	.good-to-know-header {
+		margin-bottom: 4rem;
+	}
+
+	.good-to-know-header h2 {
+		font-size: 3.5rem;
+	}
+
+	.good-to-know-list {
+		list-style: none;
+		max-width: 900px;
+	}
+
+	.good-to-know-list li {
+		font-size: 1.05rem;
+		line-height: 1.7;
+		color: var(--text-muted);
+		padding: 1.2rem 0;
+		border-bottom: 1px solid var(--border-blue);
+	}
+
+	.good-to-know-list li strong {
+		color: var(--navy-deep);
+		font-weight: 700;
+	}
+
+	/* Location Section */
+	.location-map-style {
+		background-size: cover;
+		background-position: 80% center;
+		background-repeat: no-repeat;
+		position: relative;
+		padding: 6rem 0 8rem;
+		color: var(--text-main);
+		background-color: #fff;
+	}
+
+	.location-map-style .container {
+		position: relative;
+		z-index: 2;
+	}
+
+	.location-map-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+
+		align-items: flex-start;
+	}
+
+	.location-map-info {
+		max-width: 480px;
+		background: rgba(255, 255, 255, 0.92);
+		padding: 3rem;
+		box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(255,255,255,0.6);
+	}
+
+	.location-hotel-visual {
+		margin-bottom: 2.5rem;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+	}
+
+	.location-hotel-visual img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.location-text-content h2 {
+		font-family: var(--font-sans);
+		font-weight: 300;
+		font-size: 1.8rem;
+		letter-spacing: 0.1em;
+		line-height: 1.3;
+		margin-bottom: 2rem;
+		color: #333;
+	}
+
+	.location-text-content p {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: #666;
+		margin-bottom: 2.5rem;
+	}
+
+	.location-contact-minimal {
+		margin-bottom: 2rem;
+		font-size: 0.85rem;
+		line-height: 1.6;
+		color: #555;
+	}
+
+	.location-contact-minimal strong {
+		color: var(--navy-deep);
+		display: inline-block;
+		width: 60px;
+	}
+
+	.location-contact-minimal p {
+		margin-bottom: 0.5rem;
+	}
+
+	.location-ctas-map {
+		display: flex;
+		align-items: center;
+		gap: 2.5rem;
+	}
+
+	.link-underlined-dark {
+		font-family: var(--font-sans);
+		text-transform: uppercase;
+		font-size: 0.7rem;
+		font-weight: 800;
+		letter-spacing: 0.15em;
+		color: var(--navy-deep);
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid rgba(16, 42, 67, 0.2);
+	}
+
+	.link-underlined-dark:hover {
+		border-bottom-color: var(--navy-deep);
+	}
+
+	/* Map Pins Styling */
+	.location-map-pins {
+		position: relative;
+		height: 600px;
+		width: 100%;
+	}
+
+	.map-pin {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.8rem;
+	}
+
+	.pin-dot {
+		width: 8px;
+		height: 8px;
+		background: #333;
+		border-radius: 50%;
+	}
+
+	.pin-label {
+		font-family: var(--font-sans);
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: #333;
+		white-space: nowrap;
+	}
+
+	.hotel-logo-pin {
+		background: #fff;
+		border: 1px solid #333;
+		padding: 1.5rem 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-serif);
+		font-size: 1.8rem;
+		line-height: 1;
+		box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+	}
+
+	.hotel-logo-pin span:last-child {
+		font-weight: 300;
+		opacity: 0.7;
+	}
+
+	/* Specific Pin Positions */
+	.pin-1 { top: 10%; left: 20%; }
+	.pin-2 { top: 25%; left: 60%; }
+	.pin-3 { top: 45%; left: 15%; }
+	.pin-hotel { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+	.pin-4 { top: 75%; left: 70%; }
+	.pin-5 { top: 85%; left: 30%; }
+
+	@media (max-width: 1024px) {
+		.location-map-grid {
+			grid-template-columns: 1fr;
+			gap: 6rem;
+		}
+		.location-map-pins {
+			height: 400px;
+		}
+		.location-text-content h2 {
+			font-size: 1.8rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.hero-press {
+			height: auto;
+			min-height: 100vh;
+			padding: 6rem 0 !important;
+		}
+
+		.hero-container {
+			flex-direction: column;
+			padding: 0 1.5rem;
+			text-align: center;
+			gap: 3rem;
+		}
+
+		.hero-content-press {
+			flex-direction: column;
+			gap: 2rem;
+		}
+
+		.hero-logo-wrapper {
+			width: 140px;
+			height: 140px;
+		}
+
+		.hero-slogan-box {
+			border-left: none;
+			border-top: 1px solid rgba(255,255,255,0.3);
+			padding-left: 0;
+			padding-top: 2rem;
+		}
+
+		.hero-h1 {
+			letter-spacing: 0.3rem;
+			font-size: 1rem;
+		}
+
+		.booking-widget-container {
+			width: 100%;
+			max-width: 420px;
+		}
+
+		.booking-card {
+			padding: 1.2rem;
+		}
+
+		.booking-details-row {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+
+		.location-map-style {
+			padding: 4rem 0;
+			background-position: center;
+		}
+
+		.location-map-info {
+			padding: 2rem 1.5rem;
+			max-width: 100%;
+		}
+
+		.location-ctas-map {
+			flex-direction: column;
+			gap: 1.5rem;
+			align-items: center;
+		}
+
+		.location-text-content {
+			text-align: center;
+		}
+
+		.location-contact-minimal strong {
+			width: auto;
+			display: inline;
+			margin-right: 0.5rem;
+		}
+
+		.park-fly-content h2 {
+			font-size: 2.5rem;
+		}
+
+		.reviews-header h2 {
+			font-size: 2.5rem;
+		}
+
+		.good-to-know-header h2 {
+			font-size: 2.5rem;
+		}
+	}
+
+</style>

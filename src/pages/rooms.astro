@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Rooms & Suites | Casco Bay Hotel | South Portland, Maine" description="Explore king, queen, and double suite rooms at Casco Bay Hotel in South Portland, ME. Modern comfort from $159/night. Book direct for best rates.">
+	<section class="rooms-header bg-coastal">
+		<div class="container header-content-minimal">
+			<span class="eyebrow">The Collection</span>
+			<h1 class="navy-text">Our <span class="serif-italic">Rooms</span></h1>
+			<p>Three room types, all renovated in 2022. Same amenities in every room — the difference is bed size and square footage. Pick what fits.</p>
+		</div>
+	</section>
+
+	<section class="rooms-list-minimal bg-navy">
+		<div class="container">
+			<!-- Deluxe King -->
+			<div class="room-editorial-clean">
+				<div class="room-visual-clean">
+					<img src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" />
+				</div>
+				<div class="room-details-clean">
+					<span class="sans-caps">Signature Suite</span>
+					<h2>The Deluxe <span class="serif-italic">King</span></h2>
+					<p>Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you're in for more than one night. Fits two comfortably.</p>
+					<div class="room-specs">
+						<div class="spec"><span>Bed</span><strong>King</strong></div>
+						<div class="spec"><span>View</span><strong>Coastal</strong></div>
+						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
+					</div>
+					<div class="room-actions-minimal">
+						<span class="price-minimal">From $189 / Night</span>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Deluxe Queen -->
+			<div class="room-editorial-clean reverse">
+				<div class="room-visual-clean">
+					<img src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
+				</div>
+				<div class="room-details-clean">
+					<span class="sans-caps">Modern Retreat</span>
+					<h2>The Deluxe <span class="serif-italic">Queen</span></h2>
+					<p>A well-sized room with a queen bed that works whether you're here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn't waste space.</p>
+					<div class="room-specs">
+						<div class="spec"><span>Bed</span><strong>Queen</strong></div>
+						<div class="spec"><span>View</span><strong>Harbor</strong></div>
+						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
+					</div>
+					<div class="room-actions-minimal">
+						<span class="price-minimal">From $159 / Night</span>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="rooms-list-minimal bg-mist">
+		<div class="container">
+			<!-- Double Suite -->
+			<div class="room-editorial-clean">
+				<div class="room-visual-clean">
+					<img src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
+				</div>
+				<div class="room-details-clean">
+					<span class="sans-caps" style="color: var(--accent);">Family Suite</span>
+					<h2 class="navy-text">The <span class="serif-italic">Double</span> Suite</h2>
+					<p>Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.</p>
+					<div class="room-specs" style="border-top-color: var(--border-blue);">
+						<div class="spec"><span>Beds</span><strong>2 Doubles</strong></div>
+						<div class="spec"><span>View</span><strong>City</strong></div>
+						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
+					</div>
+					<div class="room-actions-minimal">
+						<span class="price-minimal" style="color: var(--navy-deep);">From $199 / Night</span>
+						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.rooms-header { padding: 12rem 0 8rem; text-align: center; }
+	.navy-text { color: var(--navy-deep); }
+	.header-content-minimal h1 { font-size: 4.5rem; margin-bottom: 2rem; }
+	.header-content-minimal p { max-width: 600px; margin: 0 auto; font-size: 1.25rem; color: var(--text-muted); line-height: 1.8; }
+
+	.rooms-list-minimal { padding: 10rem 0; }
+	.room-editorial-clean {
+		display: grid;
+		grid-template-columns: 1.1fr 0.9fr;
+		gap: 8rem;
+		align-items: center;
+	}
+	.room-editorial-clean.reverse { grid-template-columns: 0.9fr 1.1fr; }
+	.room-editorial-clean.reverse .room-visual-clean { order: 2; }
+
+	.room-visual-clean { height: 600px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+	.room-visual-clean img { width: 100%; height: 100%; object-fit: cover; }
+
+	.room-details-clean span.sans-caps { color: #60a5fa; margin-bottom: 2rem; display: block; }
+	.room-details-clean h2 { font-size: 3.5rem; margin-bottom: 2.5rem; }
+	.room-details-clean p { font-size: 1.1rem; color: #94a3b8; line-height: 1.8; margin-bottom: 3rem; }
+	.bg-mist .room-details-clean p { color: var(--text-muted); }
+	.bg-mist .room-details-clean h2 { color: var(--navy-deep); }
+
+	.room-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+	.spec span { display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 0.5rem; }
+	.spec strong { font-size: 0.9rem; font-weight: 600; }
+
+	.room-actions-minimal { display: flex; align-items: center; justify-content: space-between; }
+	.price-minimal { font-size: 1.1rem; font-weight: 600; color: var(--white); }
+
+	@media (max-width: 1024px) {
+		.room-editorial-clean, .room-editorial-clean.reverse {
+			grid-template-columns: 1fr;
+			gap: 4rem;
+		}
+		.room-visual-clean { height: 400px; }
+		.room-visual-clean { order: 1 !important; }
+		.room-details-clean { order: 2 !important; }
+		.header-content-minimal h1 { font-size: 3rem; }
+	}
+</style>
