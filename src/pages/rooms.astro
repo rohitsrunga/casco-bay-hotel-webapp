@@ -1,128 +1,264 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const rooms = [
+	{
+		eyebrow: 'Signature Stay',
+		title: 'Deluxe King',
+		image: `${import.meta.env.BASE_URL}assets/rooms/king.jpg`,
+		alt: 'Deluxe King room at Casco Bay Hotel South Portland Maine',
+		specs: ['2 Guests', '1 King Bed', '350 SQFT'],
+		description:
+			'Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge, and the breathing room that makes a longer stay feel easy.',
+		highlights: ['Dedicated desk', 'Mini fridge & microwave', 'Keurig coffee maker', 'Premium WiFi']
+	},
+	{
+		eyebrow: 'Modern Retreat',
+		title: 'Deluxe Queen',
+		image: `${import.meta.env.BASE_URL}assets/rooms/queen.jpg`,
+		alt: 'Deluxe Queen room at Casco Bay Hotel South Portland Maine',
+		specs: ['2 Guests', '1 Queen Bed', '280 SQFT'],
+		description:
+			'A well-sized room with a queen bed that works whether you are here for one night or four. Same core amenities as our king rooms, in a layout that keeps everything simple and efficient.',
+		highlights: ['Queen bed', 'Compact, efficient layout', 'Premium WiFi', 'Keurig, fridge & microwave']
+	},
+	{
+		eyebrow: 'Family Stay',
+		title: 'Double Room',
+		image: `${import.meta.env.BASE_URL}assets/rooms/double.jpg`,
+		alt: 'Double room with two beds at Casco Bay Hotel Maine',
+		specs: ['4 Guests', '2 Double Beds', '400 SQFT'],
+		description:
+			'Two double beds, more square footage, and the flexibility families or friends usually need. It is the room guests come back to when they want a little more room to spread out.',
+		highlights: ['Two double beds', 'Largest family-friendly layout', 'Premium WiFi', 'Mini fridge & microwave']
+	}
+];
 ---
 
-<Layout title="Rooms & Suites | Casco Bay Hotel | South Portland, Maine" description="Explore king, queen, and double suite rooms at Casco Bay Hotel in South Portland, ME. Modern comfort from $159/night. Book direct for best rates.">
-	<section class="rooms-header bg-coastal">
-		<div class="container header-content-minimal">
-			<span class="eyebrow">The Collection</span>
-			<h1 class="navy-text">Our <span class="serif-italic">Rooms</span></h1>
-			<p>Three room types, all renovated in 2022. Same amenities in every room — the difference is bed size and square footage. Pick what fits.</p>
+<Layout title="Rooms | Casco Bay Hotel" description="Explore our king, queen, and double rooms at Casco Bay Hotel in South Portland, Maine.">
+	<section class="rooms-hero bg-warm">
+		<div class="container rooms-hero-inner">
+			<span class="eyebrow">Casco Bay Hotel</span>
+			<h1>Our Rooms</h1>
+			<p>Three room types, one consistent approach: renovated spaces, practical amenities, and layouts that feel easy to settle into whether you are here for a quick overnight or a longer Maine stay.</p>
 		</div>
 	</section>
 
-	<section class="rooms-list-minimal bg-navy">
+	<section class="rooms-overview bg-coastal textured">
 		<div class="container">
-			<!-- Deluxe King -->
-			<div class="room-editorial-clean">
-				<div class="room-visual-clean">
-					<img src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" />
-				</div>
-				<div class="room-details-clean">
-					<span class="sans-caps">Signature Suite</span>
-					<h2>The Deluxe <span class="serif-italic">King</span></h2>
-					<p>Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you're in for more than one night. Fits two comfortably.</p>
-					<div class="room-specs">
-						<div class="spec"><span>Bed</span><strong>King</strong></div>
-						<div class="spec"><span>View</span><strong>Coastal</strong></div>
-						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
-					</div>
-					<div class="room-actions-minimal">
-						<span class="price-minimal">From $189 / Night</span>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
-					</div>
-				</div>
+			<div class="section-heading">
+				<span class="eyebrow">Choose Your Stay</span>
+				<h2 class="navy-text">Comfort That Fits the Trip</h2>
+				<p>All rooms include premium WiFi, a Keurig, a refrigerator, a microwave, and the same clean, updated finish. The main difference is how much room you want and how many beds you need.</p>
 			</div>
 
-			<!-- Deluxe Queen -->
-			<div class="room-editorial-clean reverse">
-				<div class="room-visual-clean">
-					<img src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
-				</div>
-				<div class="room-details-clean">
-					<span class="sans-caps">Modern Retreat</span>
-					<h2>The Deluxe <span class="serif-italic">Queen</span></h2>
-					<p>A well-sized room with a queen bed that works whether you're here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn't waste space.</p>
-					<div class="room-specs">
-						<div class="spec"><span>Bed</span><strong>Queen</strong></div>
-						<div class="spec"><span>View</span><strong>Harbor</strong></div>
-						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
-					</div>
-					<div class="room-actions-minimal">
-						<span class="price-minimal">From $159 / Night</span>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="rooms-list-minimal bg-mist">
-		<div class="container">
-			<!-- Double Suite -->
-			<div class="room-editorial-clean">
-				<div class="room-visual-clean">
-					<img src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
-				</div>
-				<div class="room-details-clean">
-					<span class="sans-caps" style="color: var(--accent);">Family Suite</span>
-					<h2 class="navy-text">The <span class="serif-italic">Double</span> Suite</h2>
-					<p>Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.</p>
-					<div class="room-specs" style="border-top-color: var(--border-blue);">
-						<div class="spec"><span>Beds</span><strong>2 Doubles</strong></div>
-						<div class="spec"><span>View</span><strong>City</strong></div>
-						<div class="spec"><span>WiFi</span><strong>Premium</strong></div>
-					</div>
-					<div class="room-actions-minimal">
-						<span class="price-minimal" style="color: var(--navy-deep);">From $199 / Night</span>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Suite</a>
-					</div>
-				</div>
+			<div class="rooms-editorial-stack">
+				{
+					rooms.map((room, index) => (
+						<article class={`room-feature${index % 2 === 1 ? ' reverse' : ''}`}>
+							<div class="room-feature-image">
+								<img src={room.image} alt={room.alt} />
+							</div>
+							<div class="room-feature-content">
+								<span class="sans-caps">{room.eyebrow}</span>
+								<h3>{room.title}</h3>
+								<div class="room-feature-specs">
+									{room.specs.map((spec) => <span>{spec}</span>)}
+								</div>
+								<p>{room.description}</p>
+								<ul class="room-feature-list">
+									{room.highlights.map((item) => <li>{item}</li>)}
+								</ul>
+								<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book This Room</a>
+							</div>
+						</article>
+					))
+				}
 			</div>
 		</div>
 	</section>
 </Layout>
 
 <style>
-	.rooms-header { padding: 12rem 0 8rem; text-align: center; }
-	.navy-text { color: var(--navy-deep); }
-	.header-content-minimal h1 { font-size: 4.5rem; margin-bottom: 2rem; }
-	.header-content-minimal p { max-width: 600px; margin: 0 auto; font-size: 1.25rem; color: var(--text-muted); line-height: 1.8; }
-
-	.rooms-list-minimal { padding: 10rem 0; }
-	.room-editorial-clean {
-		display: grid;
-		grid-template-columns: 1.1fr 0.9fr;
-		gap: 8rem;
-		align-items: center;
+	.rooms-hero {
+		padding: 11rem 0 5rem;
 	}
-	.room-editorial-clean.reverse { grid-template-columns: 0.9fr 1.1fr; }
-	.room-editorial-clean.reverse .room-visual-clean { order: 2; }
 
-	.room-visual-clean { height: 600px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-	.room-visual-clean img { width: 100%; height: 100%; object-fit: cover; }
+	.rooms-hero-inner {
+		max-width: 860px;
+	}
 
-	.room-details-clean span.sans-caps { color: #60a5fa; margin-bottom: 2rem; display: block; }
-	.room-details-clean h2 { font-size: 3.5rem; margin-bottom: 2.5rem; }
-	.room-details-clean p { font-size: 1.1rem; color: #94a3b8; line-height: 1.8; margin-bottom: 3rem; }
-	.bg-mist .room-details-clean p { color: var(--text-muted); }
-	.bg-mist .room-details-clean h2 { color: var(--navy-deep); }
+	.rooms-hero h1 {
+		font-size: clamp(3.8rem, 9vw, 6.5rem);
+		line-height: 0.95;
+		color: var(--navy-deep);
+		margin-bottom: 1.5rem;
+	}
 
-	.room-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
-	.spec span { display: block; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 0.5rem; }
-	.spec strong { font-size: 0.9rem; font-weight: 600; }
+	.rooms-hero p {
+		max-width: 660px;
+		font-size: 1.15rem;
+		line-height: 1.8;
+		color: var(--text-muted);
+	}
 
-	.room-actions-minimal { display: flex; align-items: center; justify-content: space-between; }
-	.price-minimal { font-size: 1.1rem; font-weight: 600; color: var(--white); }
+	.section-heading {
+		max-width: 760px;
+		margin-bottom: 4rem;
+		position: relative;
+		z-index: 2;
+	}
 
-	@media (max-width: 1024px) {
-		.room-editorial-clean, .room-editorial-clean.reverse {
+	.section-heading h2 {
+		font-size: 3.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.section-heading p {
+		font-size: 1.05rem;
+		line-height: 1.8;
+		color: var(--text-muted);
+	}
+
+	.rooms-editorial-stack {
+		display: grid;
+		gap: 2.5rem;
+		position: relative;
+		z-index: 2;
+	}
+
+	.room-feature {
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+		align-items: stretch;
+		background: rgba(255, 255, 255, 0.74);
+		border: 1px solid rgba(16, 42, 67, 0.08);
+		box-shadow: 0 20px 45px rgba(16, 42, 67, 0.08);
+		backdrop-filter: blur(10px);
+		overflow: hidden;
+	}
+
+	.room-feature.reverse {
+		grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.05fr);
+	}
+
+	.room-feature.reverse .room-feature-image {
+		order: 2;
+	}
+
+	.room-feature-image img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: 420px;
+		object-fit: cover;
+	}
+
+	.room-feature-content {
+		padding: 2.5rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.room-feature-content .sans-caps {
+		color: var(--accent);
+		margin-bottom: 1rem;
+	}
+
+	.room-feature-content h3 {
+		font-size: 3rem;
+		line-height: 1;
+		color: var(--navy-deep);
+		margin-bottom: 1.25rem;
+	}
+
+	.room-feature-specs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.1rem;
+		font-family: var(--font-sans);
+		font-size: 0.67rem;
+		text-transform: uppercase;
+		letter-spacing: 0.16em;
+		color: var(--text-muted);
+		margin-bottom: 1.5rem;
+	}
+
+	.room-feature-content p {
+		font-size: 1rem;
+		line-height: 1.8;
+		color: var(--text-muted);
+		margin-bottom: 1.5rem;
+		max-width: 34rem;
+	}
+
+	.room-feature-list {
+		list-style: none;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem 1rem;
+		margin-bottom: 2rem;
+	}
+
+	.room-feature-list li {
+		padding-left: 1.1rem;
+		position: relative;
+		font-weight: 600;
+		color: var(--navy-deep);
+	}
+
+	.room-feature-list li::before {
+		content: "—";
+		position: absolute;
+		left: 0;
+		color: var(--accent);
+	}
+
+	@media (max-width: 960px) {
+		.room-feature,
+		.room-feature.reverse {
 			grid-template-columns: 1fr;
-			gap: 4rem;
 		}
-		.room-visual-clean { height: 400px; }
-		.room-visual-clean { order: 1 !important; }
-		.room-details-clean { order: 2 !important; }
-		.header-content-minimal h1 { font-size: 3rem; }
+
+		.room-feature.reverse .room-feature-image {
+			order: 0;
+		}
+
+		.section-heading h2 {
+			font-size: 2.8rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.rooms-hero {
+			padding: 9rem 0 4rem;
+		}
+
+		.rooms-hero h1 {
+			font-size: 3.4rem;
+		}
+
+		.rooms-hero p,
+		.section-heading p,
+		.room-feature-content p {
+			font-size: 1rem;
+		}
+
+		.room-feature-image img {
+			min-height: 280px;
+		}
+
+		.room-feature-content {
+			padding: 1.5rem;
+		}
+
+		.room-feature-content h3 {
+			font-size: 2.25rem;
+		}
+
+		.room-feature-list {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

@@ -22,11 +22,12 @@ const testimonials = [
 const roomSlides = [
 	{
 		id: 'king',
-		eyebrow: 'Signature Suite',
+		eyebrow: 'Signature Stay',
 		title: 'Deluxe King',
 		image: `${import.meta.env.BASE_URL}assets/rooms/king.jpg`,
 		alt: 'Deluxe King room at Casco Bay Hotel South Portland Maine',
 		specs: ['2 Guests', '1 King Bed', '350 SQFT'],
+		summary: 'Our largest room, with extra space to unpack and settle in.',
 		description:
 			'Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you\'re in for more than one night.'
 	},
@@ -37,16 +38,18 @@ const roomSlides = [
 		image: `${import.meta.env.BASE_URL}assets/rooms/queen.jpg`,
 		alt: 'Deluxe Queen room at Casco Bay Hotel South Portland Maine',
 		specs: ['2 Guests', '1 Queen Bed', '280 SQFT'],
+		summary: 'A clean, efficient layout for short stays and easy weekends.',
 		description:
 			'A well-sized room with a queen bed that works whether you\'re here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn\'t waste space.'
 	},
 	{
 		id: 'double',
-		eyebrow: 'Family Suite',
-		title: 'Double Suite',
+		eyebrow: 'Family Stay',
+		title: 'Double Room',
 		image: `${import.meta.env.BASE_URL}assets/rooms/double.jpg`,
-		alt: 'Double Suite with two beds at Casco Bay Hotel Maine',
+		alt: 'Double room with two beds at Casco Bay Hotel Maine',
 		specs: ['4 Guests', '2 Double Beds', '400 SQFT'],
+		summary: 'The most flexible option for families or friends sharing a stay.',
 		description:
 			'Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.'
 	}
@@ -362,14 +365,15 @@ const roomSlides = [
 								<div class="room-slide-image">
 									<img src={room.image} alt={room.alt} />
 								</div>
-								<div class="room-slide-content">
-									<span class="eyebrow">{room.eyebrow}</span>
-									<h2>{room.title}</h2>
-									<div class="suite-specs-line">
-										{room.specs.map((spec) => <span>{spec}</span>)}
+								<div class="room-slide-caption">
+									<div>
+										<span class="eyebrow">{room.eyebrow}</span>
+										<h2>{room.title}</h2>
+										<p>{room.summary}</p>
 									</div>
-									<p>{room.description}</p>
-									<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
+									<a href="/casco-bay-hotel-webapp/rooms" class="room-see-more">
+										See More <span aria-hidden="true">→</span>
+									</a>
 								</div>
 							</article>
 						))
@@ -391,23 +395,40 @@ const roomSlides = [
 			}
 		</div>
 
-		<div class="rooms-mobile-stack">
+		<div class="rooms-mobile-shell">
+			<button class="rooms-mobile-nav prev" type="button" aria-label="Previous room">‹</button>
+			<div class="rooms-mobile-viewport">
+				<div class="rooms-mobile-stack">
+					{
+						roomSlides.map((room) => (
+							<article class="room-mobile-card">
+								<div class="room-mobile-image">
+									<img src={room.image} alt={room.alt} />
+								</div>
+								<div class="room-mobile-content">
+									<span class="eyebrow">{room.eyebrow}</span>
+									<h2>{room.title}</h2>
+									<p>{room.summary}</p>
+									<a href="/casco-bay-hotel-webapp/rooms" class="room-see-more">
+										See More <span aria-hidden="true">→</span>
+									</a>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</div>
+			<button class="rooms-mobile-nav next" type="button" aria-label="Next room">›</button>
+		</div>
+		<div class="rooms-mobile-dots" aria-label="Mobile rooms pagination">
 			{
-				roomSlides.map((room) => (
-					<article class="room-mobile-card">
-						<div class="room-mobile-image">
-							<img src={room.image} alt={room.alt} />
-						</div>
-						<div class="room-mobile-content">
-							<span class="eyebrow">{room.eyebrow}</span>
-							<h2>{room.title}</h2>
-							<div class="suite-specs-line">
-								{room.specs.map((spec) => <span>{spec}</span>)}
-							</div>
-							<p>{room.description}</p>
-							<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
-						</div>
-					</article>
+				roomSlides.map((_, index) => (
+					<button
+						type="button"
+						class={`rooms-mobile-dot${index === 0 ? ' is-active' : ''}`}
+						data-index={index}
+						aria-label={`Go to mobile room ${index + 1}`}
+					></button>
 				))
 			}
 		</div>
@@ -419,9 +440,35 @@ const roomSlides = [
 		const roomDots = Array.from(document.querySelectorAll('.rooms-dot')) as HTMLButtonElement[];
 		const roomPrevButton = document.querySelector('.rooms-nav.prev') as HTMLButtonElement | null;
 		const roomNextButton = document.querySelector('.rooms-nav.next') as HTMLButtonElement | null;
+		const mobileRoomCards = Array.from(document.querySelectorAll('.room-mobile-card')) as HTMLElement[];
+		const mobileRoomDots = Array.from(document.querySelectorAll('.rooms-mobile-dot')) as HTMLButtonElement[];
+		const mobileRoomPrevButton = document.querySelector('.rooms-mobile-nav.prev') as HTMLButtonElement | null;
+		const mobileRoomNextButton = document.querySelector('.rooms-mobile-nav.next') as HTMLButtonElement | null;
 		let activeRoom = 0;
 
 		function renderRoomSlide(index: number) {
+			if (window.innerWidth <= 1024) {
+				if (mobileRoomCards.length === 0) return;
+
+				activeRoom = (index + mobileRoomCards.length) % mobileRoomCards.length;
+				mobileRoomCards.forEach((card, cardIndex) => {
+					card.classList.remove('is-active', 'is-before', 'is-after');
+					if (cardIndex === activeRoom) {
+						card.classList.add('is-active');
+					} else if (cardIndex === (activeRoom - 1 + mobileRoomCards.length) % mobileRoomCards.length) {
+						card.classList.add('is-before');
+					} else {
+						card.classList.add('is-after');
+					}
+				});
+
+				mobileRoomDots.forEach((dot, dotIndex) => {
+					dot.classList.toggle('is-active', dotIndex === activeRoom);
+				});
+
+				return;
+			}
+
 			if (!roomsTrack || !roomsViewport) return;
 
 			activeRoom = (index + roomDots.length) % roomDots.length;
@@ -442,6 +489,20 @@ const roomSlides = [
 		});
 
 		roomDots.forEach((dot) => {
+			dot.addEventListener('click', () => {
+				renderRoomSlide(Number(dot.dataset.index ?? 0));
+			});
+		});
+
+		mobileRoomPrevButton?.addEventListener('click', () => {
+			renderRoomSlide(activeRoom - 1);
+		});
+
+		mobileRoomNextButton?.addEventListener('click', () => {
+			renderRoomSlide(activeRoom + 1);
+		});
+
+		mobileRoomDots.forEach((dot) => {
 			dot.addEventListener('click', () => {
 				renderRoomSlide(Number(dot.dataset.index ?? 0));
 			});
@@ -902,12 +963,17 @@ const roomSlides = [
 
 	.rooms-carousel-shell {
 		position: relative;
-		max-width: 1260px;
+		max-width: 1180px;
 		margin: 0 auto;
-		padding: 0 4.5rem;
+		padding: 0 6rem;
 	}
 
 	.rooms-mobile-stack {
+		display: none;
+	}
+
+	.rooms-mobile-shell,
+	.rooms-mobile-dots {
 		display: none;
 	}
 
@@ -925,76 +991,63 @@ const roomSlides = [
 	.room-slide {
 		flex: 0 0 100%;
 		width: 100%;
-		display: grid;
-		grid-template-columns: minmax(0, 0.96fr) minmax(340px, 0.84fr);
-		align-items: stretch;
-		background: var(--navy-deep);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		box-shadow: 0 24px 50px rgba(4, 20, 36, 0.18);
+		display: flex;
+		flex-direction: column;
+		gap: 0;
 	}
 
 	.room-slide-image img {
 		display: block;
 		width: 100%;
 		height: 100%;
-		min-height: 500px;
+		min-height: 450px;
+		max-height: 520px;
 		object-fit: cover;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		box-shadow: 0 18px 42px rgba(4, 20, 36, 0.16);
 	}
 
-	.room-slide-content {
-		padding: 4.25rem 4rem;
+	.room-slide-caption {
+		margin-top: 1.15rem;
+		padding: 1.1rem 0.25rem 0;
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
+		align-items: end;
+		justify-content: space-between;
+		gap: 2.25rem;
 	}
 
-	.room-slide-content .eyebrow {
+	.room-slide-caption .eyebrow {
 		color: #60a5fa;
-		margin-bottom: 1rem;
+		margin-bottom: 0.55rem;
 	}
 
-	.room-slide-content h2 {
-		font-size: 3.9rem;
-		line-height: 0.96;
-		margin-bottom: 1.4rem;
+	.room-slide-caption h2 {
+		font-size: 2.15rem;
+		line-height: 1;
+		margin-bottom: 0.45rem;
 		font-weight: 400;
 	}
 
-	.suite-specs-line {
-		display: flex;
-		gap: 1.4rem;
-		flex-wrap: wrap;
-		font-family: var(--font-sans);
-		font-size: 0.62rem;
-		text-transform: uppercase;
-		letter-spacing: 0.18em;
+	.room-slide-caption p {
+		font-size: 0.9rem;
+		line-height: 1.65;
 		color: #94a3b8;
-		margin-bottom: 1.75rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding-bottom: 1rem;
-	}
-
-	.room-slide-content p {
-		font-size: 0.96rem;
-		line-height: 1.75;
-		color: #94a3b8;
-		margin-bottom: 2.2rem;
-		max-width: 28rem;
+		max-width: 31rem;
 	}
 
 	.rooms-nav {
 		position: absolute;
-		top: 50%;
+		top: 215px;
 		transform: translateY(-50%);
-		width: 2.7rem;
-		height: 2.7rem;
+		width: 2.45rem;
+		height: 2.45rem;
 		border: 1px solid rgba(255, 255, 255, 0.28);
 		background: rgba(255, 255, 255, 0.08);
 		color: var(--white);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 1.35rem;
+		font-size: 1.2rem;
 		line-height: 1;
 		cursor: pointer;
 		z-index: 3;
@@ -1002,11 +1055,11 @@ const roomSlides = [
 	}
 
 	.rooms-nav.prev {
-		left: 1.25rem;
+		left: 1rem;
 	}
 
 	.rooms-nav.next {
-		right: 1.25rem;
+		right: 1rem;
 	}
 
 	.rooms-carousel-dots {
@@ -1014,7 +1067,7 @@ const roomSlides = [
 		align-items: center;
 		justify-content: center;
 		gap: 0.7rem;
-		margin-top: 1rem;
+		margin-top: 0.75rem;
 	}
 
 	.rooms-dot {
@@ -1031,10 +1084,6 @@ const roomSlides = [
 		background: var(--white);
 	}
 
-	.room-mobile-card {
-		background: var(--navy-deep);
-	}
-
 	.room-mobile-image img {
 		display: block;
 		width: 100%;
@@ -1043,49 +1092,48 @@ const roomSlides = [
 	}
 
 	.room-mobile-content {
-		padding: 3rem 1.5rem 3.5rem;
+		padding: 1rem 0.35rem 0;
 	}
 
 	.room-mobile-content .eyebrow {
 		color: #60a5fa;
-		margin-bottom: 1.5rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.room-mobile-content h2 {
-		font-size: 3rem;
-		margin-bottom: 1rem;
+		font-size: 2rem;
+		margin-bottom: 0.45rem;
 		font-weight: 400;
 	}
 
 	.room-mobile-content p {
-		font-size: 1.1rem;
-		line-height: 1.8;
+		font-size: 0.9rem;
+		line-height: 1.65;
 		color: #94a3b8;
-		margin-bottom: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.room-see-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--font-sans);
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		font-size: 0.68rem;
+		font-weight: 800;
+		color: var(--white);
+		padding-bottom: 0.25rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+		white-space: nowrap;
+	}
+
+	.room-see-more:hover {
+		border-bottom-color: rgba(255, 255, 255, 0.6);
 	}
 
 	.btn-primary-suites {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 1.05rem 2.4rem;
-		background-color: var(--accent);
-		color: var(--white) !important;
-		font-family: var(--font-sans);
-		text-transform: uppercase;
-		letter-spacing: 0.18em;
-		font-size: 0.72rem;
-		font-weight: 800;
-		border: none;
-		cursor: pointer;
-		transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-		box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-	}
-
-	.btn-primary-suites:hover {
-		background-color: #1d4ed8;
-		transform: translateY(-4px);
-		box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
+		display: none;
 	}
 
 	.amenities-magazine-layout {
@@ -1331,7 +1379,72 @@ const roomSlides = [
 		}
 
 		.rooms-mobile-stack {
-			display: grid;
+			display: block;
+			position: relative;
+			width: 100%;
+		}
+
+		.rooms-mobile-shell {
+			display: block;
+			position: relative;
+			padding: 0 1.75rem;
+		}
+
+		.rooms-mobile-viewport {
+			overflow: hidden;
+			position: relative;
+			min-height: 560px;
+		}
+
+		.rooms-mobile-dots {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.7rem;
+			margin-top: 1rem;
+		}
+
+		.rooms-mobile-dot {
+			width: 0.72rem;
+			height: 0.72rem;
+			border-radius: 999px;
+			border: none;
+			background: rgba(255, 255, 255, 0.28);
+			cursor: pointer;
+			padding: 0;
+		}
+
+		.rooms-mobile-dot.is-active {
+			background: var(--white);
+		}
+
+		.room-mobile-card {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			transform: translateX(18px);
+			transition: opacity 0.35s ease, transform 0.4s ease;
+			pointer-events: none;
+		}
+
+		.room-mobile-card.is-active {
+			opacity: 1;
+			transform: translateX(0);
+			position: relative;
+			pointer-events: auto;
+			z-index: 2;
+		}
+
+		.room-mobile-card.is-before {
+			opacity: 0;
+			transform: translateX(-18px);
+			z-index: 1;
+		}
+
+		.room-mobile-card.is-after {
+			opacity: 0;
+			transform: translateX(18px);
+			z-index: 1;
 		}
 
 		.rooms-carousel-shell {
@@ -1339,19 +1452,40 @@ const roomSlides = [
 		}
 
 		.room-mobile-image img {
-			min-height: 380px;
+			min-height: 330px;
+			max-height: 380px;
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			box-shadow: 0 16px 36px rgba(4, 20, 36, 0.16);
+		}
+
+		.rooms-mobile-nav {
+			display: inline-flex;
+			position: absolute;
+			top: 165px;
+			align-items: center;
+			justify-content: center;
+			width: 2.5rem;
+			height: 2.5rem;
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			background: rgba(4, 20, 36, 0.34);
+			color: var(--white);
+			font-size: 1.3rem;
+			line-height: 1;
+			padding: 0;
+			cursor: pointer;
+			z-index: 3;
+		}
+
+		.rooms-mobile-nav.prev {
+			left: 2rem;
+		}
+
+		.rooms-mobile-nav.next {
+			right: 2rem;
 		}
 
 		.suite-specs-line {
-			border-bottom: none;
-			padding-bottom: 0;
-			margin-bottom: 2rem;
-			font-style: italic;
-			font-family: var(--font-serif);
-			text-transform: none;
-			font-size: 1.1rem;
-			color: #94a3b8;
-			gap: 1.5rem;
+			display: none;
 		}
 
 		.visual-main {
@@ -1437,16 +1571,39 @@ const roomSlides = [
 			font-size: 2.3rem;
 		}
 
+		.rooms-mobile-shell {
+			padding: 0 1.25rem;
+		}
+
+		.rooms-mobile-viewport {
+			min-height: 500px;
+		}
+
 		.room-mobile-image img {
-			min-height: 280px;
+			min-height: 285px;
+			max-height: 320px;
 		}
 
 		.room-mobile-content {
-			padding: 2rem 1.5rem 2.5rem;
+			padding: 0.95rem 0.15rem 0;
 		}
 
 		.room-mobile-content h2 {
-			font-size: 2.4rem;
+			font-size: 1.8rem;
+		}
+
+		.rooms-mobile-nav {
+			top: 145px;
+			width: 2.1rem;
+			height: 2.1rem;
+		}
+
+		.rooms-mobile-nav.prev {
+			left: 1.5rem;
+		}
+
+		.rooms-mobile-nav.next {
+			right: 1.5rem;
 		}
 
 		.testimonial-carousel-shell {
