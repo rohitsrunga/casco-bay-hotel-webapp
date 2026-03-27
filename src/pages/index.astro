@@ -18,6 +18,39 @@ const testimonials = [
 		source: 'Choice Privileges'
 	}
 ];
+
+const roomSlides = [
+	{
+		id: 'king',
+		eyebrow: 'Signature Suite',
+		title: 'Deluxe King',
+		image: `${import.meta.env.BASE_URL}assets/rooms/king.jpg`,
+		alt: 'Deluxe King room at Casco Bay Hotel South Portland Maine',
+		specs: ['2 Guests', '1 King Bed', '350 SQFT'],
+		description:
+			'Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you\'re in for more than one night.'
+	},
+	{
+		id: 'queen',
+		eyebrow: 'Modern Retreat',
+		title: 'Deluxe Queen',
+		image: `${import.meta.env.BASE_URL}assets/rooms/queen.jpg`,
+		alt: 'Deluxe Queen room at Casco Bay Hotel South Portland Maine',
+		specs: ['2 Guests', '1 Queen Bed', '280 SQFT'],
+		description:
+			'A well-sized room with a queen bed that works whether you\'re here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn\'t waste space.'
+	},
+	{
+		id: 'double',
+		eyebrow: 'Family Suite',
+		title: 'Double Suite',
+		image: `${import.meta.env.BASE_URL}assets/rooms/double.jpg`,
+		alt: 'Double Suite with two beds at Casco Bay Hotel Maine',
+		specs: ['4 Guests', '2 Double Beds', '400 SQFT'],
+		description:
+			'Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.'
+	}
+];
 ---
 
 <Layout title="Casco Bay Hotel | South Portland, ME | Hotel Near Portland Airport" description="Casco Bay Hotel in South Portland, Maine — boutique hotel minutes from Portland International Jetport. Free airport shuttle, hot breakfast, free parking & Park & Fly packages. Book direct.">
@@ -81,8 +114,8 @@ const testimonials = [
 							<div class="occupancy-section">
 								<div class="custom-input-box">
 									<select id="adults-count" class="select-reset">
-										<option value="1">1 ADULT</option>
-										<option value="2" selected>2 ADULTS</option>
+										<option value="1" selected>1 ADULT</option>
+										<option value="2">2 ADULTS</option>
 										<option value="3">3 ADULTS</option>
 										<option value="4">4 ADULTS</option>
 										<option value="5">5 ADULTS</option>
@@ -319,135 +352,106 @@ const testimonials = [
 			<span class="section-kicker">Our Rooms</span>
 		</div>
 
-		<div class="suites-split-wrapper">
-			<div class="suites-visual-sticky">
-				<div class="sticky-image-container">
-					<img id="suite-img-king" src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" class="active" />
-					<img id="suite-img-queen" src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
-					<img id="suite-img-double" src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
+		<div class="rooms-carousel-shell rooms-carousel-desktop">
+			<button class="rooms-nav prev" type="button" aria-label="Previous room">‹</button>
+			<div class="rooms-carousel-viewport">
+				<div class="rooms-carousel-track">
+					{
+						roomSlides.map((room) => (
+							<article class="room-slide" data-room={room.id}>
+								<div class="room-slide-image">
+									<img src={room.image} alt={room.alt} />
+								</div>
+								<div class="room-slide-content">
+									<span class="eyebrow">{room.eyebrow}</span>
+									<h2>{room.title}</h2>
+									<div class="suite-specs-line">
+										{room.specs.map((spec) => <span>{spec}</span>)}
+									</div>
+									<p>{room.description}</p>
+									<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
+								</div>
+							</article>
+						))
+					}
 				</div>
 			</div>
+			<button class="rooms-nav next" type="button" aria-label="Next room">›</button>
+		</div>
+		<div class="rooms-carousel-dots" aria-label="Rooms pagination">
+			{
+				roomSlides.map((_, index) => (
+					<button
+						type="button"
+						class={`rooms-dot${index === 0 ? ' is-active' : ''}`}
+						data-index={index}
+						aria-label={`Go to room ${index + 1}`}
+					></button>
+				))
+			}
+		</div>
 
-			<div class="suites-details-scroll">
-				<div class="suite-content-block" data-suite="king">
-					<div class="suite-image-mobile">
-						<img src={`${import.meta.env.BASE_URL}assets/rooms/king.jpg`} alt="Deluxe King room at Casco Bay Hotel South Portland Maine" />
-					</div>
-					<div class="suite-info-inner">
-						<span class="eyebrow">Signature Suite</span>
-						<h2>Deluxe King</h2>
-						<div class="suite-specs-line">
-							<span>2 Guests</span>
-							<span>1 King Bed</span>
-							<span>350 SQFT</span>
+		<div class="rooms-mobile-stack">
+			{
+				roomSlides.map((room) => (
+					<article class="room-mobile-card">
+						<div class="room-mobile-image">
+							<img src={room.image} alt={room.alt} />
 						</div>
-						<p>Our largest room, with a king bed, dedicated desk, and enough space to actually unpack. Good blackout shades, a Keurig, a mini fridge — the things that matter when you're in for more than one night.</p>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
-					</div>
-				</div>
-
-				<div class="suite-content-block" data-suite="queen">
-					<div class="suite-image-mobile">
-						<img src={`${import.meta.env.BASE_URL}assets/rooms/queen.jpg`} alt="Deluxe Queen room at Casco Bay Hotel South Portland Maine" />
-					</div>
-					<div class="suite-info-inner">
-						<span class="eyebrow">Modern Retreat</span>
-						<h2>Deluxe Queen</h2>
-						<div class="suite-specs-line">
-							<span>2 Guests</span>
-							<span>1 Queen Bed</span>
-							<span>280 SQFT</span>
+						<div class="room-mobile-content">
+							<span class="eyebrow">{room.eyebrow}</span>
+							<h2>{room.title}</h2>
+							<div class="suite-specs-line">
+								{room.specs.map((spec) => <span>{spec}</span>)}
+							</div>
+							<p>{room.description}</p>
+							<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
 						</div>
-						<p>A well-sized room with a queen bed that works whether you're here for one night or four. Same amenities as our king rooms — premium WiFi, Keurig, microwave and fridge — in a layout that doesn't waste space.</p>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
-					</div>
-				</div>
-
-				<div class="suite-content-block" data-suite="double">
-					<div class="suite-image-mobile">
-						<img src={`${import.meta.env.BASE_URL}assets/rooms/double.jpg`} alt="Double Suite with two beds at Casco Bay Hotel Maine" />
-					</div>
-					<div class="suite-info-inner">
-						<span class="eyebrow">Family Suite</span>
-						<h2>Double Suite</h2>
-						<div class="suite-specs-line">
-							<span>4 Guests</span>
-							<span>2 Double Beds</span>
-							<span>400 SQFT</span>
-						</div>
-						<p>Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.</p>
-						<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary-suites">Book Your Stay</a>
-					</div>
-				</div>
-			</div>
+					</article>
+				))
+			}
 		</div>
 	</section>
 
 	<script>
-		const suiteBlocks = document.querySelectorAll('.suite-content-block');
-		const suiteImages = document.querySelectorAll('.sticky-image-container img');
-		const stickyVisual = document.querySelector('.suites-visual-sticky') as HTMLElement | null;
-		const gallerySection = document.getElementById('rooms') as HTMLElement | null;
+		const roomsTrack = document.querySelector('.rooms-carousel-track') as HTMLElement | null;
+		const roomsViewport = document.querySelector('.rooms-carousel-viewport') as HTMLElement | null;
+		const roomDots = Array.from(document.querySelectorAll('.rooms-dot')) as HTMLButtonElement[];
+		const roomPrevButton = document.querySelector('.rooms-nav.prev') as HTMLButtonElement | null;
+		const roomNextButton = document.querySelector('.rooms-nav.next') as HTMLButtonElement | null;
+		let activeRoom = 0;
 
-		function handleSticky() {
-			if (!stickyVisual || !gallerySection || window.innerWidth <= 1024) return;
+		function renderRoomSlide(index: number) {
+			if (!roomsTrack || !roomsViewport) return;
 
-			const rect = gallerySection.getBoundingClientRect();
-			const sectionTop = rect.top;
-			const sectionBottom = rect.bottom;
+			activeRoom = (index + roomDots.length) % roomDots.length;
+			const slideWidth = roomsViewport.clientWidth;
+			roomsTrack.style.transform = `translateX(-${activeRoom * slideWidth}px)`;
 
-			const wrapper = gallerySection.querySelector('.suites-split-wrapper') as HTMLElement | null;
-			if (!wrapper) return;
-
-			const wrapperRect = wrapper.getBoundingClientRect();
-
-			if (sectionTop <= 0 && sectionBottom >= window.innerHeight) {
-				stickyVisual.classList.add('is-fixed');
-				stickyVisual.classList.remove('is-bottom');
-				stickyVisual.style.left = `${wrapperRect.left}px`;
-				stickyVisual.style.width = `${wrapperRect.width / 2}px`;
-			} else if (sectionBottom < window.innerHeight) {
-				stickyVisual.classList.remove('is-fixed');
-				stickyVisual.classList.add('is-bottom');
-				stickyVisual.style.left = '0';
-				stickyVisual.style.width = '50%';
-			} else {
-				stickyVisual.classList.remove('is-fixed');
-				stickyVisual.classList.remove('is-bottom');
-				stickyVisual.style.left = '0';
-				stickyVisual.style.width = '50%';
-			}
+			roomDots.forEach((dot, dotIndex) => {
+				dot.classList.toggle('is-active', dotIndex === activeRoom);
+			});
 		}
 
-		window.addEventListener('scroll', handleSticky);
-		window.addEventListener('resize', handleSticky);
-		handleSticky();
+		roomPrevButton?.addEventListener('click', () => {
+			renderRoomSlide(activeRoom - 1);
+		});
 
-		const observerOptions = {
-			root: null,
-			threshold: 0.5,
-			rootMargin: '-10% 0px -10% 0px'
-		};
+		roomNextButton?.addEventListener('click', () => {
+			renderRoomSlide(activeRoom + 1);
+		});
 
-		const suiteObserver = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('is-active');
-					const suiteId = entry.target.getAttribute('data-suite');
-					suiteImages.forEach((img) => {
-						if (img.id === `suite-img-${suiteId}`) {
-							img.classList.add('active');
-						} else {
-							img.classList.remove('active');
-						}
-					});
-				} else {
-					entry.target.classList.remove('is-active');
-				}
+		roomDots.forEach((dot) => {
+			dot.addEventListener('click', () => {
+				renderRoomSlide(Number(dot.dataset.index ?? 0));
 			});
-		}, observerOptions);
+		});
 
-		suiteBlocks.forEach((block) => suiteObserver.observe(block));
+		window.addEventListener('resize', () => {
+			renderRoomSlide(activeRoom);
+		});
+
+		renderRoomSlide(0);
 	</script>
 
 	<section id="amenities" class="amenities-magazine bg-mist textured">
@@ -466,7 +470,7 @@ const testimonials = [
 					<h2 class="amenity-heading">Everything You <span class="serif-italic">Actually Need</span></h2>
 					<div class="amenities-feature-card">
 						<div class="amenities-summary-grid">
-							<p class="amenity-subtext">Hot breakfast every morning. Free parking always. A 24-hour shuttle to and from the Jetport. Fast WiFi that can handle a work call before you head into Portland. The essentials are covered so the stay feels straightforward from check-in on.</p>
+							<p class="amenity-subtext">Hot breakfast every morning. Free parking. A 24-hour shuttle to and from the Jetport. Fast WiFi. The essentials are covered for you to enjoy Portland.</p>
 							<div class="amenities-summary-side">
 								<ul class="amenity-highlight-list">
 									<li>Hot breakfast included daily</li>
@@ -885,145 +889,192 @@ const testimonials = [
 	}
 
 	.suites-vertical-gallery {
-		padding: 0 0 2rem;
+		padding: 0 0 3rem;
 		position: relative;
 	}
 
 	.rooms-intro {
 		padding-top: 5.5rem;
-		padding-bottom: 2rem;
+		padding-bottom: 1.5rem;
 		position: relative;
 		z-index: 12;
 	}
 
-	.suites-split-wrapper {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: stretch;
+	.rooms-carousel-shell {
 		position: relative;
+		max-width: 1260px;
+		margin: 0 auto;
+		padding: 0 4.5rem;
 	}
 
-	.suites-visual-sticky {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100vh;
-		width: 50%;
-		overflow: hidden;
-		background: var(--navy-deep);
-		z-index: 10;
-	}
-
-	.suites-visual-sticky.is-fixed {
-		position: fixed;
-		top: 0;
-	}
-
-	.suites-visual-sticky.is-bottom {
-		top: auto;
-		bottom: 0;
-	}
-
-	.sticky-image-container {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
-
-	.sticky-image-container img {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		opacity: 0;
-		transition: opacity 0.8s ease-in-out, transform 1.2s ease-out;
-		transform: scale(1.05);
-	}
-
-	.sticky-image-container img.active {
-		opacity: 1;
-		transform: scale(1);
-		z-index: 2;
-	}
-
-	.suite-image-mobile {
+	.rooms-mobile-stack {
 		display: none;
 	}
 
-	.suites-details-scroll {
-		grid-column: 2;
-		background: var(--navy-deep);
-		color: var(--white);
-		position: relative;
-		z-index: 5;
+	.rooms-carousel-viewport {
+		overflow: hidden;
 	}
 
-	.suite-content-block {
-		min-height: 80vh;
+	.rooms-carousel-track {
 		display: flex;
-		align-items: center;
-		padding: 10rem 10%;
-		scroll-snap-align: center;
+		width: 100%;
+		transition: transform 0.55s ease;
+		will-change: transform;
 	}
 
-	.suite-info-inner {
-		max-width: 500px;
-		opacity: 0.1;
-		transform: translateY(40px);
-		transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
-		filter: blur(4px);
+	.room-slide {
+		flex: 0 0 100%;
+		width: 100%;
+		display: grid;
+		grid-template-columns: minmax(0, 0.96fr) minmax(340px, 0.84fr);
+		align-items: stretch;
+		background: var(--navy-deep);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		box-shadow: 0 24px 50px rgba(4, 20, 36, 0.18);
 	}
 
-	.suite-content-block.is-active .suite-info-inner {
-		opacity: 1;
-		transform: translateY(0);
-		filter: blur(0);
+	.room-slide-image img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: 500px;
+		object-fit: cover;
 	}
 
-	.suite-info-inner .eyebrow {
+	.room-slide-content {
+		padding: 4.25rem 4rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.room-slide-content .eyebrow {
 		color: #60a5fa;
-		margin-bottom: 1.5rem;
+		margin-bottom: 1rem;
 	}
 
-	.suite-info-inner h2 {
-		font-size: 5rem;
-		line-height: 1;
-		margin-bottom: 2rem;
+	.room-slide-content h2 {
+		font-size: 3.9rem;
+		line-height: 0.96;
+		margin-bottom: 1.4rem;
 		font-weight: 400;
 	}
 
 	.suite-specs-line {
 		display: flex;
-		gap: 2rem;
+		gap: 1.4rem;
+		flex-wrap: wrap;
 		font-family: var(--font-sans);
-		font-size: 0.7rem;
+		font-size: 0.62rem;
 		text-transform: uppercase;
-		letter-spacing: 0.15em;
+		letter-spacing: 0.18em;
 		color: #94a3b8;
-		margin-bottom: 2.5rem;
+		margin-bottom: 1.75rem;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding-bottom: 1.5rem;
+		padding-bottom: 1rem;
 	}
 
-	.suite-info-inner p {
+	.room-slide-content p {
+		font-size: 0.96rem;
+		line-height: 1.75;
+		color: #94a3b8;
+		margin-bottom: 2.2rem;
+		max-width: 28rem;
+	}
+
+	.rooms-nav {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.7rem;
+		height: 2.7rem;
+		border: 1px solid rgba(255, 255, 255, 0.28);
+		background: rgba(255, 255, 255, 0.08);
+		color: var(--white);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.35rem;
+		line-height: 1;
+		cursor: pointer;
+		z-index: 3;
+		backdrop-filter: blur(10px);
+	}
+
+	.rooms-nav.prev {
+		left: 1.25rem;
+	}
+
+	.rooms-nav.next {
+		right: 1.25rem;
+	}
+
+	.rooms-carousel-dots {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.7rem;
+		margin-top: 1rem;
+	}
+
+	.rooms-dot {
+		width: 0.72rem;
+		height: 0.72rem;
+		border-radius: 999px;
+		border: none;
+		background: rgba(255, 255, 255, 0.28);
+		cursor: pointer;
+		padding: 0;
+	}
+
+	.rooms-dot.is-active {
+		background: var(--white);
+	}
+
+	.room-mobile-card {
+		background: var(--navy-deep);
+	}
+
+	.room-mobile-image img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.room-mobile-content {
+		padding: 3rem 1.5rem 3.5rem;
+	}
+
+	.room-mobile-content .eyebrow {
+		color: #60a5fa;
+		margin-bottom: 1.5rem;
+	}
+
+	.room-mobile-content h2 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+		font-weight: 400;
+	}
+
+	.room-mobile-content p {
 		font-size: 1.1rem;
 		line-height: 1.8;
 		color: #94a3b8;
-		margin-bottom: 3.5rem;
+		margin-bottom: 3rem;
 	}
 
 	.btn-primary-suites {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1.4rem 3.5rem;
+		padding: 1.05rem 2.4rem;
 		background-color: var(--accent);
 		color: var(--white) !important;
 		font-family: var(--font-sans);
 		text-transform: uppercase;
-		letter-spacing: 0.2em;
-		font-size: 0.8rem;
+		letter-spacing: 0.18em;
+		font-size: 0.72rem;
 		font-weight: 800;
 		border: none;
 		cursor: pointer;
@@ -1039,7 +1090,7 @@ const testimonials = [
 
 	.amenities-magazine-layout {
 		display: grid;
-		grid-template-columns: 0.8fr 1.2fr;
+		grid-template-columns: 0.9fr 1.4fr;
 		gap: 8rem;
 		align-items: center;
 	}
@@ -1084,7 +1135,7 @@ const testimonials = [
 
 	.amenities-summary-grid {
 		display: grid;
-		grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
+		grid-template-columns: minmax(0, 1.05fr) minmax(20px, 0.95fr);
 		gap: 2rem;
 		align-items: start;
 	}
@@ -1274,46 +1325,21 @@ const testimonials = [
 			padding-bottom: 0;
 		}
 
-		.suites-split-wrapper {
-			grid-template-columns: 1fr;
-		}
-
-		.suites-visual-sticky {
+		.rooms-carousel-desktop,
+		.rooms-carousel-dots {
 			display: none;
 		}
 
-		.suite-image-mobile {
-			display: block;
-			width: 100%;
-			height: 350px;
-			overflow: hidden;
+		.rooms-mobile-stack {
+			display: grid;
 		}
 
-		.suite-image-mobile img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+		.rooms-carousel-shell {
+			padding: 0 2rem;
 		}
 
-		.suite-content-block {
-			height: auto;
-			min-height: auto;
-			padding: 0 0 6rem 0;
-			background: var(--navy-deep);
-			display: block;
-		}
-
-		.suite-info-inner {
-			padding: 3rem 1.5rem;
-			max-width: 100%;
-			opacity: 1;
-			transform: none;
-			filter: none;
-		}
-
-		.suite-info-inner h2 {
-			font-size: 3rem;
-			margin-bottom: 1rem;
+		.room-mobile-image img {
+			min-height: 380px;
 		}
 
 		.suite-specs-line {
@@ -1341,7 +1367,7 @@ const testimonials = [
 		}
 
 		.amenities-summary-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: 2fr;
 			gap: 1.5rem;
 		}
 
@@ -1409,6 +1435,18 @@ const testimonials = [
 		.experience-heading,
 		.amenity-heading {
 			font-size: 2.3rem;
+		}
+
+		.room-mobile-image img {
+			min-height: 280px;
+		}
+
+		.room-mobile-content {
+			padding: 2rem 1.5rem 2.5rem;
+		}
+
+		.room-mobile-content h2 {
+			font-size: 2.4rem;
 		}
 
 		.testimonial-carousel-shell {
