@@ -35,10 +35,13 @@ const testimonials = [
 				<div class="hero-content-press">
 					<div class="hero-logo-wrapper fade-in-up">
 						<svg class="main-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<rect x="20" y="20" width="200" height="200" stroke="white" stroke-width="2" />
-							<text x="50" y="150" font-family="var(--font-serif)" font-size="110" fill="white" font-weight="500">C</text>
-							<text x="130" y="150" font-family="var(--font-serif)" font-size="110" fill="white" font-weight="300" opacity="0.9">B</text>
-							<text x="120" y="195" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="white" letter-spacing="0.3em" font-weight="700" text-transform="uppercase">CASCO BAY HOTEL</text>
+							<rect x="18" y="18" width="204" height="204" stroke="rgba(255,255,255,0.82)" stroke-width="1.5" />
+							<rect x="32" y="32" width="176" height="176" stroke="rgba(255,255,255,0.22)" stroke-width="1" />
+							<text x="66" y="134" font-family="Cinzel, serif" font-size="88" fill="white" font-weight="500">C</text>
+							<text x="128" y="134" font-family="Cormorant Garamond, serif" font-size="94" fill="white" font-weight="400" opacity="0.95">B</text>
+							<line x1="62" y1="157" x2="178" y2="157" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
+							<text x="120" y="181" text-anchor="middle" font-family="Cinzel, serif" font-size="14" fill="white" letter-spacing="0.18em">CASCO BAY</text>
+							<text x="120" y="198" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="rgba(255,255,255,0.78)" letter-spacing="0.42em" font-weight="700">HOTEL</text>
 						</svg>
 					</div>
 					<div class="hero-slogan-box fade-in-up">
@@ -102,41 +105,42 @@ const testimonials = [
 				</div>
 			</div>
 
-			<div class="testimonials-carousel" aria-label="Guest testimonials">
-				<div class="testimonials-header">
-					<span class="eyebrow hero-eyebrow">Guest Reviews</span>
-					<h2>What Guests Remember</h2>
-				</div>
-				<div class="testimonial-carousel-shell">
-					<button class="testimonial-nav prev" type="button" aria-label="Previous testimonial">‹</button>
-					<div class="testimonials-track">
+				<div class="testimonials-carousel" aria-label="Guest testimonials">
+					<div class="testimonials-header">
+						<span class="eyebrow hero-eyebrow">What our guests say</span>
+					</div>
+					<div class="testimonial-carousel-shell">
+						<button class="testimonial-nav prev" type="button" aria-label="Previous testimonial">‹</button>
+						<div class="testimonial-viewport">
+							<div class="testimonials-track">
+								{
+									testimonials.map((testimonial) => (
+										<article class="testimonial-card">
+											<div class="testimonial-stars" aria-label="Five stars">★★★★★</div>
+											<p>&ldquo;{testimonial.quote}&rdquo;</p>
+											<span class="testimonial-author">{testimonial.author}, {testimonial.source}</span>
+										</article>
+									))
+								}
+							</div>
+						</div>
+						<button class="testimonial-nav next" type="button" aria-label="Next testimonial">›</button>
+					</div>
+					<div class="testimonial-dots" aria-label="Testimonial pagination">
 						{
-							testimonials.map((testimonial) => (
-								<article class="testimonial-card">
-									<div class="testimonial-stars" aria-label="Five stars">★★★★★</div>
-									<p>&ldquo;{testimonial.quote}&rdquo;</p>
-									<span class="testimonial-author">{testimonial.author}, {testimonial.source}</span>
-								</article>
+							testimonials.map((_, index) => (
+								<button
+									type="button"
+									class={`testimonial-dot${index === 0 ? ' is-active' : ''}`}
+									data-index={index}
+									aria-label={`Go to testimonial ${index + 1}`}
+								></button>
 							))
 						}
 					</div>
-					<button class="testimonial-nav next" type="button" aria-label="Next testimonial">›</button>
-				</div>
-				<div class="testimonial-dots" aria-label="Testimonial pagination">
-					{
-						testimonials.map((_, index) => (
-							<button
-								type="button"
-								class={`testimonial-dot${index === 0 ? ' is-active' : ''}`}
-								data-index={index}
-								aria-label={`Go to testimonial ${index + 1}`}
-							></button>
-						))
-					}
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
 	<script>
 		const video = document.getElementById('hero-video') as HTMLVideoElement | null;
@@ -219,6 +223,7 @@ const testimonials = [
 		});
 
 		const testimonialTrack = document.querySelector('.testimonials-track') as HTMLElement | null;
+		const testimonialViewport = document.querySelector('.testimonial-viewport') as HTMLElement | null;
 		const testimonialCards = Array.from(document.querySelectorAll('.testimonial-card')) as HTMLElement[];
 		const testimonialDots = Array.from(document.querySelectorAll('.testimonial-dot')) as HTMLButtonElement[];
 		const prevButton = document.querySelector('.testimonial-nav.prev') as HTMLButtonElement | null;
@@ -231,14 +236,27 @@ const testimonials = [
 		}
 
 		function renderTestimonials(index: number) {
-			if (!testimonialTrack || testimonialCards.length === 0) return;
+			if (!testimonialTrack || !testimonialViewport || testimonialCards.length === 0) return;
 
 			activeSlide = (index + testimonialCards.length) % testimonialCards.length;
 
 			if (isMobileCarousel()) {
-				testimonialTrack.style.transform = `translateX(-${activeSlide * 100}%)`;
+				testimonialTrack.style.transform = 'none';
+				testimonialCards.forEach((card, cardIndex) => {
+					card.classList.remove('is-active', 'is-before', 'is-after');
+					if (cardIndex === activeSlide) {
+						card.classList.add('is-active');
+					} else if (cardIndex === (activeSlide - 1 + testimonialCards.length) % testimonialCards.length) {
+						card.classList.add('is-before');
+					} else {
+						card.classList.add('is-after');
+					}
+				});
 			} else {
 				testimonialTrack.style.transform = 'translateX(0)';
+				testimonialCards.forEach((card) => {
+					card.classList.remove('is-active', 'is-before', 'is-after');
+				});
 			}
 
 			testimonialDots.forEach((dot, dotIndex) => {
@@ -281,13 +299,15 @@ const testimonials = [
 
 	<section class="experience bg-coastal textured">
 		<div class="container">
+			<div class="section-header section-header-dark">
+				<span class="section-kicker">Welcome In</span>
+			</div>
 			<div class="experience-block">
 				<div class="experience-visual">
 					<img src={`${import.meta.env.BASE_URL}assets/amenities/exterior.jpg`} alt="Casco Bay Hotel exterior building in South Portland Maine" />
 				</div>
 				<div class="experience-content">
-					<span class="eyebrow-dash">About Us</span>
-					<h2 class="navy-text">Unwind in Style <span class="serif-italic">with</span> <br /> <strong>Casco Bay Hotel</strong></h2>
+					<h2 class="experience-heading">Unwind in Style <span class="serif-italic">with</span> <br /> <strong>Casco Bay Hotel</strong></h2>
 					<p>Casco Bay Hotel sits in South Portland, just across the bridge from the Old Port and a two-minute drive from Portland International Jetport. We renovated completely in 2022 — new rooms, new lobby, new everything — because we wanted guests to actually look forward to coming back.</p>
 					<p>Whether you're here for a long weekend on the coast, a work trip to Portland, or catching an early flight out of PWM, we've built this place around making that easy.</p>
 					<a href="https://www.choicehotels.com/maine/south-portland/ascend-hotels/me049" class="btn-primary">Book Now</a>
@@ -297,9 +317,8 @@ const testimonials = [
 	</section>
 
 	<section id="rooms" class="suites-vertical-gallery bg-navy">
-		<div class="rooms-intro container">
-			<span class="eyebrow">Rooms</span>
-			<h2>Stay Close to Portland, Sleep Like You Mean It</h2>
+		<div class="rooms-intro container section-header section-header-light">
+			<span class="section-kicker">Our Rooms</span>
 		</div>
 
 		<div class="suites-split-wrapper">
@@ -435,6 +454,9 @@ const testimonials = [
 
 	<section id="amenities" class="amenities-magazine bg-mist textured">
 		<div class="container">
+			<div class="section-header section-header-dark">
+				<span class="section-kicker">Our Amenities</span>
+			</div>
 			<div class="amenities-magazine-layout">
 				<div class="amenity-visual">
 					<div class="visual-stack">
@@ -443,36 +465,37 @@ const testimonials = [
 					</div>
 				</div>
 				<div class="amenity-content-right">
-					<div class="amenity-intro-wrap">
-						<span class="eyebrow">The Experience</span>
-						<h2 class="navy-text">Everything You <span class="serif-italic">Actually Need</span></h2>
-					</div>
+					<h2 class="amenity-heading">Everything You <span class="serif-italic">Actually Need</span></h2>
 					<div class="amenities-feature-card">
-						<p class="amenity-subtext">Hot breakfast every morning. Free parking always. A 24-hour shuttle to and from the Jetport. Bike rentals for a spin toward the coast. EV charging on site. Fast WiFi that can handle a work call before you head into Portland.</p>
-						<ul class="amenity-highlight-list">
-							<li>Hot breakfast included daily</li>
-							<li>Free on-site parking</li>
-							<li>24-hour airport shuttle</li>
-							<li>Complimentary bike rentals</li>
-							<li>Electric vehicle charging</li>
-							<li>Premium high-speed WiFi</li>
-						</ul>
-						<a href="/casco-bay-hotel-webapp/experience" class="amenity-detail-link">See all amenities & guest info →</a>
+						<div class="amenities-summary-grid">
+							<p class="amenity-subtext">Hot breakfast every morning. Free parking always. A 24-hour shuttle to and from the Jetport. Fast WiFi that can handle a work call before you head into Portland. The essentials are covered so the stay feels straightforward from check-in on.</p>
+							<div class="amenities-summary-side">
+								<ul class="amenity-highlight-list">
+									<li>Hot breakfast included daily</li>
+									<li>Free on-site parking</li>
+									<li>24-hour airport shuttle</li>
+									<li>Premium high-speed WiFi</li>
+								</ul>
+								<a href="/casco-bay-hotel-webapp/experience" class="amenity-detail-link">See all amenities & guest info →</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</section>
 
 	<section id="location" class="location-map-style" style={`background-image: url('${import.meta.env.BASE_URL}assets/location/map.jpg')`}>
 		<div class="container">
+			<div class="section-header section-header-dark location-section-header">
+				<span class="section-kicker">Our Location</span>
+			</div>
 			<div class="location-map-grid">
 				<div class="location-map-info">
 					<div class="location-hotel-visual">
 						<img src={`${import.meta.env.BASE_URL}assets/location/building.jpg`} alt="Casco Bay Hotel exterior building in South Portland Maine" />
 					</div>
 					<div class="location-text-content">
-						<h2>WHERE TO FIND US</h2>
+						<h2 class="location-heading">Where to Find Us</h2>
 						<p>We're on John Roberts Road in South Portland — 1.4 miles from Portland International Jetport, about 10 minutes to the Old Port depending on bridge traffic, and 5 minutes to Willard Beach if you want your feet in the ocean. Cracker Barrel and a handful of local spots are within walking distance for dinner. If you're flying in or out of PWM, we're genuinely the most convenient hotel on either side of the bridge.</p>
 
 						<div class="location-contact-minimal">
@@ -553,12 +576,12 @@ const testimonials = [
 		max-width: 680px;
 		display: flex;
 		align-items: center;
-		gap: 3rem;
+		gap: 1.75rem;
 	}
 
 	.hero-logo-wrapper {
-		width: 180px;
-		height: 180px;
+		width: 172px;
+		height: 172px;
 		flex-shrink: 0;
 	}
 
@@ -570,7 +593,7 @@ const testimonials = [
 	.hero-slogan-box {
 		color: var(--white);
 		border-left: 1px solid rgba(255, 255, 255, 0.3);
-		padding-left: 3.5rem;
+		padding-left: 1.75rem;
 	}
 
 	.hero-h1 {
@@ -703,64 +726,71 @@ const testimonials = [
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
+		gap: 1rem;
+		align-items: center;
 	}
 
 	.testimonials-header {
 		display: flex;
-		align-items: end;
-		justify-content: space-between;
-		gap: 1rem;
+		justify-content: center;
 	}
 
 	.hero-eyebrow {
 		color: #c7ddff;
-		margin-bottom: 0.75rem;
-	}
-
-	.testimonials-header h2 {
-		font-size: 2.4rem;
-		font-weight: 500;
+		margin-bottom: 0;
 	}
 
 	.testimonial-carousel-shell {
 		position: relative;
+		width: 100%;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.testimonial-viewport {
+		width: 100%;
 	}
 
 	.testimonials-track {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 1.25rem;
+		grid-template-columns: repeat(3, minmax(0, 240px));
+		gap: 1rem;
+		justify-content: center;
 	}
 
 	.testimonial-card {
-		background: rgba(255, 255, 255, 0.96);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(242, 247, 252, 0.92) 100%);
 		color: var(--navy-deep);
-		padding: 2rem;
-		border: 1px solid rgba(255, 255, 255, 0.4);
-		box-shadow: 0 18px 45px rgba(4, 20, 36, 0.18);
+		padding: 1.1rem 1.15rem 1.2rem;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		box-shadow: 0 10px 24px rgba(4, 20, 36, 0.12);
+		min-height: 170px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		backdrop-filter: blur(10px);
 	}
 
 	.testimonial-stars {
-		font-size: 0.85rem;
-		letter-spacing: 0.35em;
+		font-size: 0.72rem;
+		letter-spacing: 0.22em;
 		color: var(--accent);
-		margin-bottom: 1rem;
+		margin-bottom: 0.9rem;
 	}
 
 	.testimonial-card p {
 		font-family: var(--font-serif);
-		font-size: 1.4rem;
+		font-size: 0.92rem;
 		font-style: italic;
 		line-height: 1.45;
-		margin-bottom: 1.5rem;
+		margin-bottom: 0.8rem;
 	}
 
 	.testimonial-author {
 		font-family: var(--font-sans);
-		font-size: 0.74rem;
+		font-size: 0.62rem;
 		font-weight: 800;
-		letter-spacing: 0.14em;
+		letter-spacing: 0.16em;
 		text-transform: uppercase;
 		color: var(--text-muted);
 	}
@@ -768,6 +798,54 @@ const testimonials = [
 	.testimonial-nav,
 	.testimonial-dots {
 		display: none;
+	}
+
+	.section-header {
+		display: flex;
+		flex-direction: column;
+		gap: 0.9rem;
+		margin-bottom: 2.5rem;
+		position: relative;
+		z-index: 2;
+	}
+
+	.section-kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 1rem;
+		font-family: var(--font-sans);
+		text-transform: uppercase;
+		font-size: 0.74rem;
+		font-weight: 800;
+		letter-spacing: 0.18em;
+	}
+
+	.section-kicker::before {
+		content: "";
+		width: 34px;
+		height: 1px;
+		background: currentColor;
+		opacity: 0.85;
+	}
+
+	.section-title {
+		font-size: 3.5rem;
+		line-height: 1.06;
+		max-width: 760px;
+	}
+
+	.section-title strong {
+		font-weight: 800;
+	}
+
+	.section-header-dark .section-kicker,
+	.section-header-dark .section-title {
+		color: var(--navy-deep);
+	}
+
+	.section-header-light .section-kicker,
+	.section-header-light .section-title {
+		color: var(--white);
 	}
 
 	.experience-block {
@@ -789,34 +867,14 @@ const testimonials = [
 		padding: 2rem 0;
 	}
 
-	.eyebrow-dash {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		font-family: var(--font-sans);
-		text-transform: uppercase;
-		font-size: 0.7rem;
-		font-weight: 700;
-		letter-spacing: 0.15em;
-		color: var(--navy-deep);
-		margin-bottom: 2rem;
-	}
-
-	.eyebrow-dash::before {
-		content: "";
-		width: 30px;
-		height: 1px;
-		background: var(--accent);
-	}
-
-	.experience-content h2 {
+	.experience-heading {
 		font-size: 3.8rem;
 		line-height: 1.1;
 		margin-bottom: 2.5rem;
 		color: var(--navy-deep);
 	}
 
-	.experience-content h2 strong {
+	.experience-heading strong {
 		font-weight: 800;
 		color: var(--text-main);
 	}
@@ -838,11 +896,6 @@ const testimonials = [
 		padding-bottom: 2rem;
 		position: relative;
 		z-index: 12;
-	}
-
-	.rooms-intro h2 {
-		font-size: 3rem;
-		max-width: 720px;
 	}
 
 	.suites-split-wrapper {
@@ -1016,11 +1069,6 @@ const testimonials = [
 		z-index: 1;
 	}
 
-	.amenity-intro-wrap h2 {
-		font-size: 4rem;
-		margin-bottom: 0.8rem;
-	}
-
 	.amenities-feature-card {
 		background: rgba(255, 255, 255, 0.78);
 		border: 1px solid rgba(37, 99, 235, 0.12);
@@ -1029,19 +1077,39 @@ const testimonials = [
 		backdrop-filter: blur(8px);
 	}
 
+	.amenity-heading {
+		font-size: 4rem;
+		line-height: 1.08;
+		margin-bottom: 1.5rem;
+		color: var(--navy-deep);
+	}
+
+	.amenities-summary-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
+		gap: 2rem;
+		align-items: start;
+	}
+
+	.amenities-summary-side {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
 	.amenity-subtext {
 		font-size: 1.1rem;
 		color: var(--text-muted);
 		line-height: 1.8;
-		margin-bottom: 2rem;
+		margin-bottom: 0;
 	}
 
 	.amenity-highlight-list {
 		list-style: none;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 0.85rem 1.5rem;
-		margin-bottom: 2rem;
+		gap: 0.85rem 1.25rem;
+		margin-bottom: 0;
 	}
 
 	.amenity-highlight-list li {
@@ -1116,7 +1184,14 @@ const testimonials = [
 		display: block;
 	}
 
-	.location-text-content h2 {
+	.location-text-content p {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: #666;
+		margin-bottom: 2.5rem;
+	}
+
+	.location-heading {
 		font-family: var(--font-sans);
 		font-weight: 300;
 		font-size: 1.8rem;
@@ -1124,13 +1199,6 @@ const testimonials = [
 		line-height: 1.3;
 		margin-bottom: 2rem;
 		color: #333;
-	}
-
-	.location-text-content p {
-		font-size: 0.95rem;
-		line-height: 1.7;
-		color: #666;
-		margin-bottom: 2.5rem;
 	}
 
 	.location-contact-minimal {
@@ -1198,9 +1266,9 @@ const testimonials = [
 			height: 500px;
 		}
 
-		.experience-content h2,
-		.amenity-intro-wrap h2,
-		.rooms-intro h2 {
+		.section-title,
+		.experience-heading,
+		.amenity-heading {
 			font-size: 2.8rem;
 		}
 
@@ -1274,6 +1342,11 @@ const testimonials = [
 			grid-template-columns: 1fr;
 		}
 
+		.amenities-summary-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
 		.location-map-pins {
 			height: 400px;
 		}
@@ -1328,50 +1401,88 @@ const testimonials = [
 		}
 
 		.testimonials-header {
-			display: block;
 			text-align: center;
 		}
 
-		.testimonials-header h2 {
-			font-size: 2rem;
+		.section-title {
+			font-size: 2.3rem;
+		}
+
+		.experience-heading,
+		.amenity-heading {
+			font-size: 2.3rem;
 		}
 
 		.testimonial-carousel-shell {
-			overflow: hidden;
+			max-width: 360px;
 			padding: 0 2.75rem;
 		}
 
+		.testimonial-viewport {
+			overflow: hidden;
+			position: relative;
+			min-height: 166px;
+		}
+
 		.testimonials-track {
-			display: flex;
-			gap: 0;
-			transition: transform 0.45s ease;
-			will-change: transform;
+			display: block;
+			width: 100%;
+			position: relative;
 		}
 
 		.testimonial-card {
-			min-width: 100%;
-			padding: 1.75rem;
+			display: flex;
+			position: absolute;
+			inset: 0;
+			min-height: 166px;
+			padding: 1.05rem 1rem 1.15rem;
+			opacity: 0;
+			transform: translateX(18px);
+			transition: opacity 0.35s ease, transform 0.4s ease;
+			pointer-events: none;
+		}
+
+		.testimonial-card.is-active {
+			opacity: 1;
+			transform: translateX(0);
+			position: relative;
+			pointer-events: auto;
+			z-index: 2;
+		}
+
+		.testimonial-card.is-before {
+			opacity: 0;
+			transform: translateX(-18px);
+			z-index: 1;
+		}
+
+		.testimonial-card.is-after {
+			opacity: 0;
+			transform: translateX(18px);
+			z-index: 1;
 		}
 
 		.testimonial-card p {
-			font-size: 1.25rem;
+			font-size: 0.9rem;
 		}
 
 		.testimonial-nav {
-			display: flex;
+			display: inline-flex;
 			position: absolute;
 			top: 50%;
 			transform: translateY(-50%);
-			width: 2.25rem;
-			height: 2.25rem;
-			border: 1px solid rgba(255, 255, 255, 0.5);
-			background: rgba(4, 20, 36, 0.52);
-			color: var(--white);
 			align-items: center;
 			justify-content: center;
-			font-size: 1.35rem;
+			border: 1px solid rgba(255, 255, 255, 0.4);
+			background: rgba(4, 20, 36, 0.34);
+			color: var(--white);
+			font-size: 1.3rem;
+			line-height: 1;
+			padding: 0;
 			cursor: pointer;
-			z-index: 3;
+			width: 2.25rem;
+			height: 2.25rem;
+			z-index: 2;
 		}
 
 		.testimonial-nav.prev {
@@ -1382,13 +1493,6 @@ const testimonials = [
 			right: 0;
 		}
 
-		.testimonial-dots {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 0.65rem;
-		}
-
 		.testimonial-dot {
 			width: 0.7rem;
 			height: 0.7rem;
@@ -1397,6 +1501,13 @@ const testimonials = [
 			background: rgba(255, 255, 255, 0.35);
 			cursor: pointer;
 			padding: 0;
+		}
+
+		.testimonial-dots {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.65rem;
 		}
 
 		.testimonial-dot.is-active {
