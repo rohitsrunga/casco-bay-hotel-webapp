@@ -73,15 +73,27 @@ const roomSlides = [
 						<svg class="main-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<rect x="18" y="18" width="204" height="204" stroke="rgba(255,255,255,0.82)" stroke-width="1.5" />
 							<rect x="32" y="32" width="176" height="176" stroke="rgba(255,255,255,0.22)" stroke-width="1" />
-							<text x="66" y="134" font-family="Cinzel, serif" font-size="88" fill="white" font-weight="500">C</text>
-							<text x="128" y="134" font-family="Cormorant Garamond, serif" font-size="94" fill="white" font-weight="400" opacity="0.95">B</text>
-							<line x1="62" y1="157" x2="178" y2="157" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
-							<text x="120" y="181" text-anchor="middle" font-family="Cinzel, serif" font-size="14" fill="white" letter-spacing="0.18em">CASCO BAY</text>
-							<text x="120" y="198" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="rgba(255,255,255,0.78)" letter-spacing="0.42em" font-weight="700">HOTEL</text>
+							<text x="66" y="122" font-family="Cormorant Garamond, serif" font-size="88" fill="white" font-weight="500">C</text>
+							<text x="128" y="122" font-family="Cormorant Garamond, serif" font-size="88" fill="white" font-weight="400" opacity="0.95">B</text>
+							<line x1="86" y1="145" x2="154" y2="145" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+							<text x="120" y="166" text-anchor="middle" font-family="Cinzel, serif" font-size="12" fill="white" letter-spacing="0.14em">CASCO BAY</text>
+							<text x="120" y="184" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="rgba(255,255,255,0.82)" letter-spacing="0.34em" font-weight="700">HOTEL</text>
 						</svg>
 					</div>
 					<div class="hero-slogan-box fade-in-up">
-						<h1 class="hero-h1">Classic Maine. Modern Comfort.</h1>
+						<div class="hero-logo-wrapper hero-logo-mobile">
+							<svg class="main-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<rect x="18" y="18" width="204" height="204" stroke="rgba(255,255,255,0.82)" stroke-width="1.5" />
+								<rect x="32" y="32" width="176" height="176" stroke="rgba(255,255,255,0.22)" stroke-width="1" />
+								<text x="66" y="122" font-family="Cormorant Garamond, serif" font-size="88" fill="white" font-weight="500">C</text>
+								<text x="128" y="122" font-family="Cormorant Garamond, serif" font-size="88" fill="white" font-weight="400" opacity="0.95">B</text>
+								<line x1="86" y1="145" x2="154" y2="145" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+								<text x="120" y="166" text-anchor="middle" font-family="Cinzel, serif" font-size="12" fill="white" letter-spacing="0.14em">CASCO BAY</text>
+								<text x="120" y="184" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="rgba(255,255,255,0.82)" letter-spacing="0.34em" font-weight="700">HOTEL</text>
+							</svg>
+						</div>
+						<div class="slogan-divider-line"></div>
+						<h1 class="hero-h1">Classic Maine.<br>Modern Comfort.</h1>
 					</div>
 				</div>
 
@@ -649,6 +661,10 @@ const roomSlides = [
 		flex-shrink: 0;
 	}
 
+	.hero-logo-mobile {
+		display: none;
+	}
+
 	.main-logo {
 		width: 100%;
 		height: 100%;
@@ -671,12 +687,12 @@ const roomSlides = [
 		line-height: 1.6;
 	}
 
-	.slogan-divider-line {
-		width: 40px;
-		height: 1px;
-		background-color: var(--accent);
-		margin: 0.5rem 0;
-	}
+		.slogan-divider-line {
+			width: 40px;
+			height: 1px;
+			background-color: var(--accent);
+			margin: 0.5rem 0;
+		}
 
 	.hero-subhead {
 		font-size: 0.95rem;
@@ -921,8 +937,9 @@ const roomSlides = [
 
 	.experience-visual img {
 		width: 100%;
-		height: 750px;
+		height: 560px;
 		object-fit: cover;
+		object-position: 36% 12%;
 		border: 1px solid var(--border-blue);
 		box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 	}
@@ -945,6 +962,7 @@ const roomSlides = [
 
 	.experience-content p {
 		font-size: 1.15rem;
+		font-family: times;
 		color: var(--text-muted);
 		line-height: 1.8;
 		margin-bottom: 2rem;
@@ -1361,7 +1379,7 @@ const roomSlides = [
 		}
 
 		.experience-visual img {
-			height: 500px;
+			height: 360px;
 		}
 
 		.section-title,
@@ -1529,17 +1547,41 @@ const roomSlides = [
 			flex-direction: column;
 			text-align: center;
 			gap: 2rem;
+			width: 100%;
+			max-width: none;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.hero-logo-wrapper {
 			display: none;
 		}
 
+		.hero-logo-mobile {
+			display: block;
+			width: 112px;
+			height: 112px;
+			margin: 0.85rem auto 0.9rem;
+		}
+
+		.hero-slogan-box .slogan-divider-line {
+			display: block;
+			width: 56px;
+			margin: 0 auto 1rem;
+			background-color: rgba(255, 255, 255, 0.7);
+		}
+
 		.hero-slogan-box {
 			border-left: none;
-			border-top: 1px solid rgba(255, 255, 255, 0.3);
+			border-top: none;
 			padding-left: 0;
-			padding-top: 2rem;
+			padding-top: 0;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
 		}
 
 		.hero-h1 {

@@ -22,7 +22,7 @@ html, body {
   --border-blue: rgba(37, 99, 235, 0.1);
   
   --font-serif: "Cormorant Garamond", serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Cormorant Garamond", system-ui, sans-serif;
   --header-height: 100px;
 }
 
