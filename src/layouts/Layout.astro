@@ -33,8 +33,11 @@ import '../styles/global.css';
 							<a href="/casco-bay-hotel-webapp/#home" class="home-badge-link" aria-label="Return to homepage booking widget">
 								<svg class="home-badge-logo" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<rect x="18" y="18" width="204" height="204" stroke="currentColor" stroke-width="1.75" />
-									<text x="58" y="146" font-family="Cormorant Garamond, serif" font-size="108" fill="currentColor" font-weight="500">C</text>
-									<text x="128" y="146" font-family="Cormorant Garamond, serif" font-size="108" fill="currentColor" font-weight="300" opacity="0.92">B</text>
+									<text x="62" y="124" font-family="Cormorant Garamond, serif" font-size="92" fill="currentColor" font-weight="500">C</text>
+									<text x="128" y="124" font-family="Cormorant Garamond, serif" font-size="92" fill="currentColor" font-weight="400" opacity="0.92">B</text>
+									<line x1="88" y1="146" x2="152" y2="146" stroke="currentColor" stroke-width="1.2" opacity="0.6" />
+									<text x="120" y="166" text-anchor="middle" font-family="Cinzel, serif" font-size="11" fill="currentColor" letter-spacing="0.14em">CASCO BAY</text>
+									<text x="120" y="183" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.5" fill="currentColor" letter-spacing="0.3em" font-weight="700" opacity="0.78">HOTEL</text>
 								</svg>
 							</a>
 						)}
@@ -146,26 +149,21 @@ import '../styles/global.css';
 				align-items: center;
 				justify-content: center;
 				color: var(--navy-deep);
-				width: 62px;
-				height: 62px;
-				border: 1px solid rgba(16, 42, 67, 0.14);
-				background: linear-gradient(180deg, rgba(252, 251, 247, 0.96) 0%, rgba(240, 244, 248, 0.92) 100%);
-				backdrop-filter: blur(10px);
-				box-shadow: 0 14px 32px rgba(16, 42, 67, 0.08);
+				width: 148px;
+				height: 54px;
 				margin-right: 2rem;
-				transform: translateY(2px);
+				transform: translateY(0);
 			}
 
 			.home-badge-logo {
-				width: 32px;
-				height: 32px;
+				width: 54px;
+				height: 54px;
 				opacity: 0.92;
 			}
 
 			.home-badge-link:hover {
 				transform: translateY(0);
-				box-shadow: 0 18px 36px rgba(16, 42, 67, 0.12);
-				border-color: rgba(16, 42, 67, 0.22);
+				opacity: 0.9;
 			}
 
 			#main-header.hide-home-badge .home-badge-link {
@@ -459,15 +457,16 @@ import '../styles/global.css';
 					}
 
 					.home-badge-link {
-						width: 54px;
-						height: 54px;
+						width: 56px;
+						height: 56px;
 						margin-right: 0;
 						transform: none;
+						justify-content: flex-start;
 					}
 
 					.home-badge-logo {
-						width: 28px;
-						height: 28px;
+						width: 56px;
+						height: 56px;
 					}
 
 				.header-center {

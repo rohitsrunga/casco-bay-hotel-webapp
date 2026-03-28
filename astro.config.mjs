@@ -5,7 +5,7 @@ import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
- // adapter: cloudflare(),
-  site: 'https://rohitsrunga.github.io',
-  base: '/casco-bay-hotel-webapp/'
+  adapter: cloudflare(),
+  site: 'cascobayhotel.com',
+  output: 'static',
 });
