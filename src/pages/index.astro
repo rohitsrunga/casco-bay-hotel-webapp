@@ -54,6 +54,9 @@ const roomSlides = [
 			'Two double beds, enough room for a family of four, and close enough to Willard Beach and the Eastern Trail that you can actually tire the kids out before bedtime. This is the room people rebook when they come back with family.'
 	}
 ];
+
+const roomsHref = `${import.meta.env.BASE_URL}rooms`;
+const experienceHref = `${import.meta.env.BASE_URL}experience`;
 ---
 
 <Layout title="Casco Bay Hotel | South Portland, ME | Hotel Near Portland Airport" description="Casco Bay Hotel in South Portland, Maine — boutique hotel minutes from Portland International Jetport. Free airport shuttle, hot breakfast, free parking & Park & Fly packages. Book direct.">
@@ -384,7 +387,7 @@ const roomSlides = [
 										<h2>{room.title}</h2>
 										<p>{room.summary}</p>
 									</div>
-									<a href="/casco-bay-hotel-webapp/rooms" class="room-see-more">
+									<a href={roomsHref} class="room-see-more">
 										See More <span aria-hidden="true">→</span>
 									</a>
 								</div>
@@ -422,7 +425,7 @@ const roomSlides = [
 									<span class="eyebrow">{room.eyebrow}</span>
 									<h2>{room.title}</h2>
 									<p>{room.summary}</p>
-									<a href="/casco-bay-hotel-webapp/rooms" class="room-see-more">
+									<a href={roomsHref} class="room-see-more">
 										See More <span aria-hidden="true">→</span>
 									</a>
 								</div>
@@ -450,6 +453,7 @@ const roomSlides = [
 	<script>
 		const roomsTrack = document.querySelector('.rooms-carousel-track') as HTMLElement | null;
 		const roomsViewport = document.querySelector('.rooms-carousel-viewport') as HTMLElement | null;
+		const mobileRoomsViewport = document.querySelector('.rooms-mobile-viewport') as HTMLElement | null;
 		const roomDots = Array.from(document.querySelectorAll('.rooms-dot')) as HTMLButtonElement[];
 		const roomPrevButton = document.querySelector('.rooms-nav.prev') as HTMLButtonElement | null;
 		const roomNextButton = document.querySelector('.rooms-nav.next') as HTMLButtonElement | null;
@@ -458,6 +462,8 @@ const roomSlides = [
 		const mobileRoomPrevButton = document.querySelector('.rooms-mobile-nav.prev') as HTMLButtonElement | null;
 		const mobileRoomNextButton = document.querySelector('.rooms-mobile-nav.next') as HTMLButtonElement | null;
 		let activeRoom = 0;
+		let mobileRoomTouchStartX = 0;
+		let mobileRoomTouchStartY = 0;
 
 		function renderRoomSlide(index: number) {
 			if (window.innerWidth <= 1024) {
@@ -521,6 +527,38 @@ const roomSlides = [
 			});
 		});
 
+		mobileRoomsViewport?.addEventListener(
+			'touchstart',
+			(event) => {
+				const touch = event.touches[0];
+				if (!touch) return;
+				mobileRoomTouchStartX = touch.clientX;
+				mobileRoomTouchStartY = touch.clientY;
+			},
+			{ passive: true }
+		);
+
+		mobileRoomsViewport?.addEventListener(
+			'touchend',
+			(event) => {
+				const touch = event.changedTouches[0];
+				if (!touch || window.innerWidth > 1024) return;
+
+				const deltaX = touch.clientX - mobileRoomTouchStartX;
+				const deltaY = touch.clientY - mobileRoomTouchStartY;
+				const swipeThreshold = 40;
+
+				if (Math.abs(deltaX) <= swipeThreshold || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+				if (deltaX < 0) {
+					renderRoomSlide(activeRoom + 1);
+				} else {
+					renderRoomSlide(activeRoom - 1);
+				}
+			},
+			{ passive: true }
+		);
+
 		window.addEventListener('resize', () => {
 			renderRoomSlide(activeRoom);
 		});
@@ -552,7 +590,7 @@ const roomSlides = [
 									<li>24-hour airport shuttle</li>
 									<li>Premium high-speed WiFi</li>
 								</ul>
-								<a href="/casco-bay-hotel-webapp/experience" class="amenity-detail-link">See all our amenities  →</a>
+								<a href={experienceHref} class="amenity-detail-link">See all our amenities  →</a>
 							</div>
 						</div>
 					</div>
@@ -1413,6 +1451,7 @@ const roomSlides = [
 			overflow: hidden;
 			position: relative;
 			min-height: 560px;
+			touch-action: pan-y;
 		}
 
 		.rooms-mobile-dots {
